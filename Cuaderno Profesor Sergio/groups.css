@@ -1,0 +1,539 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e0f2f7; /* Light blue background */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* changed from center -> show top of page on load */
+    min-height: 100vh;
+    color: #333;
+    padding: 20px;
+    box-sizing: border-box;
+    padding-top: 70px; /* Space for the fixed global buttons */
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 60px; /* Adjust for smaller button */
+    }
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #007bff; /* Blue heading */
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 600;
+}
+
+h2 {
+    color: #007bff;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-bottom: 2px solid #e0f2f7;
+    padding-bottom: 10px;
+}
+
+.back-button {
+    background-color: #6c757d; /* Grey button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.section {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.create-button {
+    background-color: #28a745; /* Green button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+}
+
+.create-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+#groupsList {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#groupsList li {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1em;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, background-color 0.2s ease, border-left-color 0.2s ease, filter 0.2s ease; /* Add filter to transition */
+    position: relative; /* For the color stripe */
+    padding-left: 25px; /* Make space for the stripe */
+    border-left: 5px solid #e9ecef; /* Default stripe, slightly visible */
+    margin-top: 10px; /* Add some default margin-top to separate items */
+}
+
+/* Style for groups with a selected color */
+#groupsList li.colored {
+    border-left-color: var(--group-color); /* The "bar" */
+    background-color: var(--group-color);  /* The "window background" - direct pastel color */
+}
+
+/* Specific styles for clickable group items */
+#groupsList li.group-item-clickable {
+    cursor: pointer;
+}
+
+/* Generic hover for non-colored items */
+#groupsList li.group-item-clickable:hover:not(.colored) {
+    transform: translateX(5px);
+    background-color: #f0f8ff; /* Existing hover for non-colored items */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1); /* Subtle blue shadow */
+}
+
+/* Specific hover for colored items: slightly darken the background */
+#groupsList li.colored.group-item-clickable:hover {
+    transform: translateX(5px);
+    filter: brightness(0.9); /* Apply a slight darkening effect */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow for colored hover */
+}
+
+/* Styles for drag and drop */
+#groupsList li.dragging {
+    opacity: 0.4;
+    border: 2px dashed #007bff !important; /* Make sure it's visible even with group colors */
+    background-color: #e9f5ff !important; /* Lighter background for dragged item */
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+#groupsList li.drag-over {
+    border-top: 2px solid #007bff; /* Indicate where the item will be inserted */
+    margin-top: -2px; /* Adjust to not increase height when border-top is added */
+}
+
+.color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.color-option {
+    display: none; /* Hide the actual radio button */
+}
+
+.color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent; /* Default border */
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-swatch.custom-swatch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#fff,#ddd);
+    color: #333;
+    font-size: 0.9em;
+}
+
+/* Style the native color input when visible */
+.custom-color-input {
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    vertical-align: middle;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+}
+
+/* Ensure when a custom color is selected the swatch shows selection state too */
+#color-custom:checked + .custom-swatch {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.color-option:checked + .color-swatch {
+    border-color: #007bff; /* Highlight selected swatch */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4); /* Glow effect for selection */
+    transform: scale(1.05);
+}
+
+.group-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex-grow: 1; /* Allow details to take available space */
+    color: #495057; /* Default text color for group details (can be overridden inline for contrast) */
+}
+
+.group-details span {
+    margin-bottom: 3px;
+    /* color now inherited from .group-details so contrast adjustments can be applied when needed */
+}
+
+.group-details .group-name {
+    font-weight: bold;
+    color: inherit; /* Use inherited color so JS can override for dark backgrounds */
+    font-size: 1.2em;
+}
+
+/* Styles for the new control buttons (edit/delete) */
+.group-controls {
+    display: flex;
+    gap: 8px; /* Space between control buttons */
+    margin-left: 15px; /* Separate from group details */
+}
+
+.group-controls button {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    color: white;
+}
+
+.edit-group-button {
+    background-color: #007bff; /* Blue */
+}
+.edit-group-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.delete-group-button {
+    background-color: #dc3545; /* Red */
+}
+.delete-group-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.no-groups-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+    cursor: default; /* Not clickable */
+    background-color: #ffffff;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+}
+
+.no-groups-message:hover {
+    transform: none; /* No transform on hover for message */
+}
+
+/* NEW: Global Left Actions Container */
+.global-left-actions-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    z-index: 1000;
+}
+
+/* Global Home Button */
+.global-home-button {
+    background-color: #007bff; /* Primary blue, consistent with main buttons */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Round button */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.global-home-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* NEW: Global Actions Container */
+.global-actions-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    z-index: 1000;
+}
+
+/* NEW: Global Load Button */
+.global-load-button {
+    background-color: #007bff; /* Blue, for a 'load' action */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.global-load-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Updated Global Save Button */
+.global-save-button {
+    background-color: #28a745; /* Green, like a save action */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.global-save-button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* NEW: Action Button (for globalAgendaButton, copied from style.css / agenda.css) */
+/* This style is also used for the new globalDailyLogButton in global-left-actions-container */
+.action-button {
+    background-color: #17a2b8; /* Cyan/Teal, distinctive color */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Round button */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+}
+
+.action-button:hover {
+    background-color: #138496; /* Darker cyan on hover */
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* NEW: Styles for the navigation buttons on the sides of ANY modal */
+.modal .student-nav-button {
+    background-color: rgba(0, 123, 255, 0.6);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 100%; /* Take full height of the modal overlay (which is flex) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 1001; /* Above modal content but below close button */
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.modal .student-nav-button.prev-button {
+    border-top-left-radius: 12px; /* Match modal content border-radius */
+    border-bottom-left-radius: 12px;
+}
+
+.modal .student-nav-button.next-button {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.modal .student-nav-button:hover:not(:disabled) {
+    background-color: rgba(0, 123, 255, 0.8);
+    transform: none;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+.modal .student-nav-button:disabled {
+    background-color: rgba(108, 117, 125, 0.4); /* Muted grey for disabled */
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .modal .student-nav-button {
+        width: 30px;
+        font-size: 1.8em;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    .form-group input[type="text"],
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+    }
+
+    .create-button, .back-button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+
+    #groupsList li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 15px;
+    }
+
+    .group-details {
+        margin-bottom: 10px;
+        width: 100%; /* Take full width on small screens */
+    }
+
+    .group-controls {
+        width: 100%; /* Take full width on small screens */
+        justify-content: flex-end; /* Align controls to end */
+        margin-left: 0; /* Remove left margin */
+        margin-top: 10px; /* Add some top margin */
+    }
+
+    /* Responsive for global left actions */
+    .global-left-actions-container {
+        top: 10px;
+        left: 10px;
+        gap: 8px;
+    }
+    .global-home-button, .action-button { /* .action-button here targets globalAgendaButton and globalDailyLogButton */
+        width: 45px;
+        height: 45px;
+        font-size: 1.6em;
+    }
+
+    /* Responsive for global save and load buttons */
+    .global-actions-container {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+    .global-save-button, .global-load-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.6em;
+    }
+}

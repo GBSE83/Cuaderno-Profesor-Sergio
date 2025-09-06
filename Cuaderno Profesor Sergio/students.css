@@ -1,0 +1,844 @@
+/* Inherits general styles from groups.css */
+
+/* General button styles for add/load/delete actions */
+.add-button, .load-button, .delete-button {
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 5px; /* Space between buttons */
+}
+
+.add-button {
+    background-color: #28a745; /* Green */
+}
+.add-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.load-button {
+    background-color: #007bff; /* Blue */
+}
+.load-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.delete-button {
+    background-color: #dc3545; /* Red */
+}
+.delete-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+/* NEW: Style for Edit Name button */
+.edit-student-name-button {
+    background-color: #6c757d; /* Grey */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 5px;
+}
+.edit-student-name-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+#studentsList {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#studentsList li {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping for student name and controls */
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+    margin-top: 8px; /* Add some default margin-top to separate items */
+    cursor: grab; /* Default cursor for potentially draggable items */
+}
+
+#studentsList li.not-draggable {
+    cursor: default; /* Change cursor for non-draggable items */
+}
+
+.student-name {
+    font-weight: bold;
+    color: #333;
+    flex-grow: 1; /* Allow name to take available space */
+    flex-shrink: 1; /* Allow name to shrink */
+    margin-right: 10px; /* Space between name and controls */
+    cursor: pointer; /* Indicate it's clickable */
+    text-decoration: underline; /* Visual cue for clickability */
+    transition: color 0.2s ease;
+    overflow: hidden; /* Hide overflowing text */
+    white-space: nowrap; /* Keep text on a single line */
+    text-overflow: ellipsis; /* Add ellipsis for truncated text */
+    min-width: 50px; /* Ensure name has a minimum width */
+}
+
+.student-name:hover {
+    color: #007bff; /* Highlight on hover */
+}
+
+.student-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between buttons/select */
+    flex-shrink: 0; /* Prevent controls from shrinking */
+    margin-top: 0; /* Ensure it stays on the same line without shifting */
+}
+
+.no-students-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* NEW: Wrapper for student filters */
+.student-filters-container {
+    background-color: #e6f7ff; /* Light blue background for filters */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px; /* Space below the entire filter block */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #d0e8f8; /* Softer border */
+}
+
+.student-list-controls {
+    display: grid;
+    /* This creates two columns that wrap, better for desktop and tablet */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px; /* Space between filter groups */
+    margin-bottom: 0; /* Remove existing margin-bottom as the container has it now */
+    align-items: end; /* Align items to the bottom, useful for labels/inputs alignment */
+}
+
+/* Adjustments for individual form groups within the new grid */
+.student-list-controls .form-group {
+    flex: none; /* Remove flex sizing if it conflicts with grid */
+    min-width: unset; /* Let grid handle min-width */
+    margin-bottom: 0; /* Remove default form-group margin */
+}
+
+/* Labels and inputs within the filter area */
+.student-list-controls label {
+    font-size: 0.9em; /* Slightly smaller label for compactness */
+    margin-bottom: 6px; /* Reduced margin */
+    font-weight: 500; /* Less bold than main form labels */
+}
+
+.student-list-controls select,
+.student-list-controls input[type="search"] {
+    width: 100%; /* Ensure inputs take full width of their grid cell */
+    padding: 8px 10px; /* Smaller padding for compactness */
+    font-size: 0.95em; /* Slightly smaller font */
+    margin-bottom: 0; /* Ensure no extra margin */
+}
+
+/* MODIFIED: characteristics-checkboxes is now characteristics-buttons, but old class might still be used for filters */
+.characteristics-checkboxes {
+    display: flex;
+    flex-direction: column; /* Changed to column for vertical stacking */
+    gap: 8px; /* Adjusted gap for vertical spacing */
+    margin-top: 5px;
+}
+
+.characteristics-checkboxes input[type="checkbox"] {
+    margin-right: 5px;
+    width: 18px;
+    height: 18px;
+    accent-color: #007bff;
+    cursor: pointer;
+}
+
+.characteristics-checkboxes label {
+    font-weight: normal;
+    color: #333;
+    margin-bottom: 0; /* Override default label margin */
+    cursor: pointer;
+    display: flex; /* Make label a flex container to align checkbox and text */
+    align-items: center; /* Vertically align content */
+    flex-shrink: 0; /* Prevent labels from shrinking */
+}
+
+/* NEW: Styles for characteristic toggle buttons in the modal */
+.characteristics-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between; /* This will spread them out */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.char-button {
+    flex: 1; /* Make them take equal space */
+    min-width: 100px; /* Minimum width before wrapping */
+    padding: 10px;
+    border: 1px solid #ced4da;
+    background-color: #f8f9fa; /* Inactive grey */
+    color: #495057;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.char-button:hover {
+    border-color: #adb5bd;
+}
+
+.char-button.active {
+    color: white;
+    border-color: transparent;
+}
+
+.char-button[data-char="ACNEE"].active {
+    background-color: #007bff; /* Blue */
+}
+
+.char-button[data-char="COMPE"].active {
+    background-color: #28a745; /* Green */
+}
+
+.char-button[data-char="REPET"].active {
+    background-color: #ffc107; /* Yellow/Orange */
+    color: #212529; /* Dark text for yellow bg */
+}
+
+.char-button[data-char="ADAPT"].active {
+    background-color: #6f42c1; /* Purple */
+}
+
+/* Make the 'Faltas' section in the student info modal more compact and smaller text.
+   Ensure the total count is bold. */
+#studentInfoModal .attendance-summary {
+    padding: 8px;
+    margin-top: 12px;
+    font-size: 0.9em;
+}
+#studentInfoModal .attendance-summary label {
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* NEW: Grid for attendance filters and total faltas */
+#studentInfoModal .attendance-filter-grid {
+    display: grid;
+    /* Force 4 equal columns to keep all items on one horizontal line */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px; /* Space between grid items */
+    align-items: end; /* Align items to the bottom */
+    margin: 8px 0; /* Space above/below the grid */
+}
+
+#studentInfoModal .attendance-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Small gap between label and select/input */
+    min-width: 0; /* Allow items to shrink to minimum width */
+}
+
+#studentInfoModal .attendance-filter-item label {
+    font-size: 0.78em; /* Smaller font for more compact labels */
+    font-weight: 600;
+    margin-bottom: 2px; /* Reduced margin below label */
+}
+
+#studentInfoModal .attendance-filter-item select {
+    padding: 4px; /* Reduced padding for shorter height */
+    font-size: 0.8em; /* Slightly smaller font for compactness */
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 28px; /* Fixed height for uniform appearance */
+    min-width: 0; /* Allow shrinking */
+}
+
+#studentInfoModal .attendance-filter-item .total-faltas-display {
+    padding: 4px 0; /* Reduced padding to match select height */
+    color: #6c757d;
+    font-size: 0.8em; /* Match select font size */
+    text-align: center; /* Center total faltas count */
+    background-color: #e9ecef; /* Subtle background for the total */
+    border-radius: 6px;
+    height: 28px; /* Fixed height to match selects */
+    display: flex; /* For vertical centering */
+    align-items: center;
+    justify-content: center;
+}
+
+#studentInfoModal #totalFaltasCount {
+    font-weight: 700; /* Total in bold */
+    font-size: 0.9em; /* Slightly smaller font for the count */
+    color: #6c757d;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.modal-actions .create-button,
+.modal-actions .back-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    min-width: 140px;
+}
+
+/* Make the grades-history button match the create-button sizing but use a navy color */
+.create-button.navy-button {
+    background-color: #0b3d91; /* Navy blue */
+    color: #ffffff;
+}
+.create-button.navy-button:hover {
+    background-color: #072a5a; /* Darker navy on hover */
+}
+
+/* Responsive adjustments for student list items */
+@media (max-width: 768px) {
+    #studentsList li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+        flex-wrap: wrap; /* Allow wrapping on small screens again */
+    }
+
+    .student-list-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .student-list-controls .form-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .student-name {
+        margin-bottom: 8px;
+        margin-right: 0;
+        width: 100%; /* Take full width */
+        min-width: unset; /* Remove min-width on small screens */
+        overflow: visible; /* Allow text to wrap naturally if space permits */
+        white-space: normal; /* Allow text to wrap naturally if space permits */
+        text-overflow: clip; /* No ellipsis when wrapping */
+    }
+
+    .student-controls {
+        width: 100%; /* Take full width for controls */
+        justify-content: flex-start; /* Align controls to start */
+        margin-top: 10px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .add-button, .load-button {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    #studentInfoModal .modal-content {
+        width: 90%;
+        max-width: 640px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 24px;
+    }
+
+    /* NEW: Responsive adjustments for student filters container */
+    .student-filters-container {
+        padding: 15px;
+    }
+    .student-list-controls {
+        grid-template-columns: 1fr; /* Single column on small screens */
+    }
+
+    #studentInfoModal .attendance-filter-grid {
+        grid-template-columns: 1fr; /* Stack items vertically on small screens */
+        gap: 10px; /* Space between stacked items */
+    }
+    #studentInfoModal .attendance-filter-item {
+        min-width: unset; /* Remove min-width */
+    }
+    #studentInfoModal .attendance-filter-item .total-faltas-display {
+        height: auto; /* Remove fixed height on small screens */
+        padding: 8px; /* Adjust padding */
+    }
+
+    /* Filters: stack neatly */
+    #studentGradesHistoryModal .ghm-filters-container > div {
+        width: 100%;
+    }
+    #studentGradesHistoryModal .ghm-filters-container select,
+    #studentGradesHistoryModal .ghm-filters-container input[type="date"],
+    #studentGradesHistoryModal .ghm-filters-container input[type="search"],
+    #studentGradesHistoryModal .ghm-filters-container button {
+        width: 100%;
+    }
+
+    /* Grades history table responsive */
+    #studentGradesHistoryTable thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    #studentGradesHistoryTable tr {
+        display: block;
+        border: 1px solid #e9ecef;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+    }
+    #studentGradesHistoryTable td {
+        display: block;
+        border: none;
+        padding: 6px 4px;
+        text-align: left;
+    }
+    /* Activity cell: make prominent, keep link full-width */
+    #studentGradesHistoryTable td:nth-child(1) a {
+        display: inline-block;
+        font-weight: 600;
+        color: #007bff;
+        text-decoration: none;
+        word-break: break-word;
+    }
+    #studentGradesHistoryTable td:nth-child(1) div {
+        margin-top: 4px;
+    }
+    /* Date cell: subtle */
+    #studentGradesHistoryTable td:nth-child(2) {
+        color: #6c757d;
+        font-size: 0.95em;
+        margin-top: 4px;
+    }
+    /* Grade input and observation: full width controls */
+    #studentGradesHistoryTable td:nth-child(3),
+    #studentGradesHistoryTable td:nth-child(4) {
+        margin-top: 6px;
+    }
+    #studentGradesHistoryTable .ghm-grade-input,
+    #studentGradesHistoryTable .ghm-observation-input {
+        width: 100% !important;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    #studentGradesHistoryTable .ghm-np-checkbox-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-right: 10px;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    /* Limit height for better mobile UX */
+    #studentGradesHistoryModal .grades-history-table-container {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+}
+
+/* Responsive for tables (reusing grade_activity.css pattern) */
+@media (max-width: 768px) {
+    /* ...existing table responsive styles... */
+
+    #studentAttendanceHistoryTable thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    #studentAttendanceHistoryTable tr {
+        border: 1px solid #e9ecef;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+    }
+
+    #studentAttendanceHistoryTable td {
+        border: none;
+        position: relative;
+        padding-left: 50%; /* Make space for the label */
+        text-align: right;
+    }
+
+    #studentAttendanceHistoryTable td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    #studentAttendanceHistoryTable td:nth-child(1):before { content: "Fecha: "; }
+    #studentAttendanceHistoryTable td:nth-child(2):before { content: "Estado: "; }
+    #studentAttendanceHistoryTable td:nth-child(3):before { content: "Justificación: "; }
+}
+
+/* Small styles for history selector and info in modal */
+.history-controls select {
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    background: #fff;
+    font-size: 0.95em;
+}
+
+/* NEW: Styles for the attendance status filter checkboxes (in the history modal) */
+.attendance-status-filter-group {
+    margin-top: 15px; /* Space above this filter */
+    margin-bottom: 20px; /* Space below this filter */
+}
+
+.attendance-status-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.attendance-status-checkboxes input[type="checkbox"] {
+    display: none; /* Hide default checkbox */
+}
+
+.attendance-status-checkboxes label {
+    background-color: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #ced4da;
+    font-weight: normal;
+    color: #555;
+    margin-bottom: 0; /* Override default label margin */
+    flex-shrink: 0; /* Prevent labels from shrinking */
+    text-transform: uppercase; /* Make status letters uppercase */
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.attendance-status-checkboxes input[type="checkbox"]:checked + label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Specific colors for status filter labels when checked */
+.attendance-status-checkboxes input[type="checkbox"][value="P"]:checked + label { background-color: #28a745; border-color: #28a745; }
+.attendance-status-checkboxes input[type="checkbox"][value="A"]:checked + label { background-color: #dc3545; border-color: #dc3545; }
+.attendance-status-checkboxes input[type="checkbox"][value="R"]:checked + label { background-color: #ffc107; border-color: #ffc107; color: #333; }
+.attendance-status-checkboxes input[type="checkbox"][value="E"]:checked + label { background-color: #6f42c1; border-color: #6f42c1; }
+.attendance-status-checkboxes input[type="checkbox"][value="N"]:checked + label { background-color: #6c757d; border-color: #6c757d; }
+.attendance-status-checkboxes input[type="checkbox"][value="all"]:checked + label { background-color: #007bff; border-color: #007bff; }
+
+/* NEW: Styles for history filter options */
+.history-filter-options {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+.filter-option-toggle {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.filter-option-toggle input[type="radio"] {
+    display: none;
+}
+
+.filter-option-toggle label {
+    background-color: #e9ecef;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #ced4da;
+    font-weight: 500;
+    color: #555;
+}
+
+.filter-option-toggle input[type="radio"]:checked + label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.history-controls .date-range-input {
+    width: 130px; /* Adjust width for date inputs */
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+.history-controls .clear-filter-button {
+    background-color: #dc3545; /* Red, like a delete action */
+    color: white;
+    border: none;
+    border-radius: 6px; /* Slightly rounded */
+    width: 28px; /* Fixed width for icon-like button */
+    height: 28px; /* Fixed height */
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex; /* Center the '✖' */
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent it from shrinking */
+    padding: 0; /* Remove default padding */
+}
+
+.history-controls .clear-filter-button:hover {
+    background-color: #c82333;
+}
+
+/* NEW: Limit height of attendance history table to 6 records */
+#studentAttendanceHistoryModal .grades-history-table-container {
+    max-height: 270px; /* Approx 6 rows * 45px per row */
+    overflow-y: auto;
+}
+
+/* NEW: Styles for Classification Filter */
+.classification-filter-group {
+    flex: 1; /* Allow to grow */
+    min-width: 250px; /* Minimum width before wrapping */
+    margin-bottom: 0;
+}
+
+.classification-filter-inputs {
+    display: flex;
+    flex-direction: column; /* Force vertical stacking on all screen sizes */
+    gap: 8px; /* Space between stacked items */
+}
+
+.classification-filter-inputs select,
+.classification-filter-inputs input[type="text"],
+.classification-filter-inputs .clear-filter-button {
+    width: 100%; /* Ensure inputs take full width of their container */
+    flex: none; /* Remove flex sizing to let width: 100% dominate */
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 0; /* Remove default margin */
+}
+
+.classification-filter-inputs select:focus,
+.classification-filter-inputs input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.classification-filter-inputs .clear-filter-button {
+    background-color: #dc3545; /* Red, like a delete action */
+    color: white;
+    border: none;
+    border-radius: 6px; /* Slightly rounded */
+    height: 38px; /* Match height of select/input for consistency */
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex; /* Center the '✖' */
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent it from shrinking */
+    padding: 0; /* Remove default padding */
+    margin-top: 0; /* Remove top margin that might be inherited */
+}
+
+.classification-filter-inputs .clear-filter-button:hover {
+    background-color: #c82333;
+}
+
+/* NEW: Integrated remove button inside classification type input */
+#studentInfoModal #classificationList .classification-row {
+    position: relative;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+#studentInfoModal #classificationList .classification-type-wrapper {
+    position: relative;
+    min-width: 160px;
+}
+#studentInfoModal #classificationList .classification-type {
+    width: 100%;
+    padding-right: 40px; /* space for the remove button inside the input */
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    height: 34px;
+}
+#studentInfoModal #classificationList .classification-type-wrapper .remove-classification {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background-color: #dc3545;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1;
+}
+#studentInfoModal #classificationList .classification-type-wrapper .remove-classification:hover {
+    background-color: #c82333;
+}
+/* Ensure description input aligns with new layout */
+#studentInfoModal #classificationList .classification-desc {
+    flex: 2 1 280px !important;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    height: 34px;
+    padding: 6px 8px;
+    box-sizing: border-box;
+}
+
+/* NEW: Stacked buttons for any modal action area */
+/* Reusable class for modal action containers that should stack buttons */
+.modal-actions.stacked-buttons {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Space between stacked buttons */
+    margin-top: 20px; /* Adjust spacing from inputs above */
+}
+
+/* Apply consistent sizing and layout to all button types within stacked containers */
+.modal-actions.stacked-buttons .create-button,
+.modal-actions.stacked-buttons .back-button,
+.modal-actions.stacked-buttons .delete-button {
+    width: 100%; /* Make them equal width */
+    min-width: unset; /* Override any min-width restrictions */
+    padding: 10px 15px; /* Consistent padding */
+    font-size: 1em; /* Consistent font size */
+    border-radius: 8px; /* Consistent border radius */
+    margin-left: 0; /* Remove horizontal margin */
+    display: flex; /* Ensure flex behavior */
+    justify-content: center; /* Center text */
+    align-items: center; /* Center text */
+}
+
+/* Specific colors for buttons in moveStudentWarningModal */
+#moveStudentWarningModal #continueMoveButton {
+    background-color: #28a745; /* Green for "Continuar (Mover)" */
+    color: white;
+}
+#moveStudentWarningModal #continueMoveButton:hover {
+    background-color: #218838;
+}
+
+#moveStudentWarningModal #createReportButton { /* Navy for "Crear Informe" */
+    background-color: #0b3d91;
+    color: white;
+}
+#moveStudentWarningModal #createReportButton:hover {
+    background-color: #072a5a;
+}
+
+#moveStudentWarningModal #cancelMoveButton { /* Grey for "Cancelar" */
+    background-color: #6c757d;
+    color: white;
+}
+#moveStudentWarningModal #cancelMoveButton:hover {
+    background-color: #5a6268;
+}
+
+/* Styles for move warning modal message */
+#moveStudentWarningModal .modal-content #moveWarningMessage {
+    text-align: left; /* Align text content to left */
+    font-size: 1em;
+    line-height: 1.5;
+    color: #333;
+}
+
+#moveStudentWarningModal .modal-content #moveWarningMessage p {
+    margin-bottom: 10px; /* Space between paragraphs */
+}
+
+#moveStudentWarningModal .modal-content #moveWarningMessage ul {
+    list-style: disc; /* Use standard bullet points */
+    margin-left: 20px;
+    margin-bottom: 15px;
+    text-align: left; /* Align bullet points to the left */
+}
+
+#moveStudentWarningModal .modal-content #moveWarningMessage ul li {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+    color: #333;
+}
+
+#moveStudentWarningModal .modal-content #moveWarningMessage .attention-text {
+    font-weight: bold;
+    color: #dc3545; /* Red color for warning */
+    margin-top: 15px;
+    line-height: 1.4;
+    text-align: center; /* Center the attention text */
+}
+
+/* NEW: Responsive adjustments for student info modal action buttons */
+@media (max-width: 480px) {
+    /* Stack student info modal action buttons vertically on narrow screens (mobile) */
+    #studentInfoModal .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    #studentInfoModal .modal-actions .create-button,
+    #studentInfoModal .modal-actions .back-button,
+    #studentInfoModal .modal-actions .delete-button,
+    #studentInfoModal .modal-actions .nav-button {
+        width: 100%;
+        min-width: unset;
+    }
+}

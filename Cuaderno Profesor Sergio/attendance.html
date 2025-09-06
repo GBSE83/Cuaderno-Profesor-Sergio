@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Asistencia</title>
+    <link rel="stylesheet" href="groups.css"> 
+    <link rel="stylesheet" href="attendance.css">
+    <link rel="stylesheet" href="grade_activity.css"> <!-- Added for modal styles -->
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <button id="globalSaveButton" class="global-save-button">💾</button>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalAgendaButton" class="action-button">📅</button>
+        <button id="globalDailyLogButton" class="action-button">✏️</button>
+    </div>
+    <div class="container">
+        <h1>Gestión de Asistencia</h1>
+
+        <div class="section">
+            <h2>Seleccionar Grupo y Fecha</h2>
+            <div class="form-group">
+                <label for="groupSelect">Grupo:</label>
+                <select id="groupSelect" required>
+                    <option value="">Selecciona un grupo</option>
+                </select>
+            </div>
+            <div class="horizontal-filters-container">
+                <div class="form-group date-filter-group">
+                    <label for="attendanceDate">Fecha:</label>
+                    <div class="date-selector">
+                        <button type="button" id="attendancePrevDayBtn" class="date-nav-button" aria-label="Día anterior">◀</button>
+                        <input type="date" id="attendanceDate" required>
+                        <button type="button" id="attendanceNextDayBtn" class="date-nav-button" aria-label="Día siguiente">▶</button>
+                    </div>
+                </div>
+                <div class="form-group search-students-group">
+                    <label for="searchStudentInput">Buscar Alumno:</label>
+                    <input type="search" id="searchStudentInput" placeholder="Buscar por nombre o apellido...">
+                </div>
+            </div>
+            <div class="form-group attendance-status-filter-group">
+                <label>Filtrar por tipo de falta:</label>
+                <div id="attendanceStatusFilter" class="attendance-status-checkboxes">
+                    <!-- Checkboxes will be populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Listado de Alumnos y Asistencia</h2>
+            <p id="groupInfoDisplay"></p>
+            <div class="attendance-actions top-actions">
+                <button id="saveAttendanceButton" class="action-button-save">Guardar</button>
+                <button id="markAllPresentButton" class="attendance-status-button status-P mark-all-action-button" title="Marcar todos Presentes">P</button>
+                <button id="markAllAbsentButton" class="attendance-status-button status-A mark-all-action-button" title="Marcar todos Ausentes">A</button>
+                <button id="markAllNotIndicatedButton" class="attendance-status-button status-N mark-all-action-button" title="Marcar todos No Indicado">N</button>
+            </div>
+            <ul id="attendanceStudentsList">
+                <!-- Student attendance items will be loaded here by JavaScript -->
+                <li class="no-students-message">Selecciona un grupo y una fecha para ver los alumnos.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- NEW: Student Attendance History Modal Structure (moved here so attendance page can open it) -->
+    <div id="studentAttendanceHistoryModal" class="modal">
+        <button id="attendanceHistoryPrevButton" class="student-nav-button prev-button" title="Alumno anterior">◀</button>
+        <div class="modal-content">
+            <span class="close-button" id="closeStudentAttendanceHistoryModal">&times;</span>
+            <h2>Historial de Asistencia de <span id="modalStudentAttendanceName"></span></h2>
+
+            <div class="history-filter-options">
+                <div class="filter-option-toggle">
+                    <input type="radio" id="filterByLastDays" name="historyFilterMode" value="lastDays" checked>
+                    <label for="filterByLastDays">Últimos registros</label>
+                    <input type="radio" id="filterByDateRange" name="historyFilterMode" value="dateRange">
+                    <label for="filterByDateRange">Rango de fechas</label>
+                </div>
+                
+                <div id="lastDaysFilterControls" class="history-controls" style="display:flex;align-items:center;gap:12px;margin:12px 0;">
+                    <label for="historyDaysSelect" style="font-weight:600;">Últimos:</label>
+                    <select id="historyDaysSelect">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15" selected>15</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="all">Todos</option>
+                    </select>
+                </div>
+
+                <div id="dateRangeFilterControls" class="history-controls" style="display:none;align-items:center;gap:12px;margin:12px 0;">
+                    <label for="historyStartDate" style="font-weight:600;">Desde:</label>
+                    <input type="date" id="historyStartDate" class="date-range-input">
+                    <label for="historyEndDate" style="font-weight:600;">Hasta:</label>
+                    <input type="date" id="historyEndDate" class="date-range-input">
+                    <button id="clearDateRangeFilterButton" class="clear-filter-button" title="Limpiar filtro de fecha">✖</button>
+                </div>
+            </div>
+
+            <label for="historyStatusSelect" style="font-weight:600;margin-left:8px;">Tipo de falta:</label>
+            <select id="historyStatusSelect">
+                <option value="all">Todas</option>
+                <option value="A">Ausente (A)</option>
+                <option value="R">Retraso (R)</option>
+                <option value="P">Presente (P)</option>
+                <option value="E">Expulsado (E)</option>
+                <option value="I">Incidencia (I)</option> <!-- NEW: Added Incidencia (I) -->
+                <option value="N">No indicado (N)</option>
+            </select>
+
+            <label for="historyJustificationSelect" style="font-weight:600;margin-left:8px;">Justificación:</label>
+            <select id="historyJustificationSelect">
+                <option value="all">Todas</option>
+                <option value="justified">Justificadas</option>
+                <option value="unjustified">Injustificadas</option>
+            </select>
+
+            <div id="attendanceHistoryCountsContainer" style="margin-top: 15px; text-align: center;">
+                <div id="historyCountInfo" style="color:#6c757d;font-size:0.95em;display:none;"></div>
+                <div id="historyCountInfoDateRange" style="color:#6c757d;font-size:0.95em;display:none;"></div>
+            </div>
+
+            <div class="grades-history-table-container">
+                <table id="studentAttendanceHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Justificación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentAttendanceHistoryTableBody">
+                        <!-- Attendance records will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="noAttendanceMessage" style="display: none; text-align: center; color: #6c757d; font-style: italic; margin-top: 20px;">No hay registros de asistencia para este alumno.</p>
+            <div class="modal-actions">
+                <button id="studentAttendanceHistorySaveButton" class="create-button">Guardar cambios</button>
+            </div>
+        </div>
+        <button id="attendanceHistoryNextButton" class="student-nav-button next-button" title="Siguiente alumno">▶</button>
+    </div>
+
+    <script type="module" src="attendance.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calificaciones de Actividad</title>
+    <link rel="stylesheet" href="groups.css"> 
+    <link rel="stylesheet" href="grade_activity.css">
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <button id="globalSaveButton" class="global-save-button">💾</button>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalAgendaButton" class="action-button">📅</button>
+        <button id="globalDailyLogButton" class="action-button">✏️</button>
+    </div>
+    <div class="container">
+        <button id="backToGradesButton" class="back-button">← Volver a Actividades</button>
+        <button id="backToReportsButton" class="back-button" style="display:none;">← Volver a Informes</button>
+
+        <div class="section activity-header">
+            <h1 id="activityNameDisplay" class="activity-title"></h1>
+            <div class="activity-meta">
+                <span id="groupDisplayInfo" class="meta-item"></span>
+                <span class="meta-separator">|</span>
+                <span id="activityDateDisplay" class="meta-item"></span>
+                <span class="meta-separator">|</span>
+                <span id="activityCategoryDisplay" class="meta-item"></span>
+                <span class="meta-separator">|</span>
+                <span id="gradingTypeDisplay" class="meta-item"></span>
+            </div>
+            <p id="activityDescriptionDisplay" class="activity-description"></p>
+            <div class="activity-header-actions">
+                <div class="activity-mark-display" id="activityMarkDisplay"></div>
+                <div class="activity-marks">
+                    <label for="activityMarkSelect" class="mark-label">Marca</label>
+                    <select id="activityMarkSelect" aria-label="Marca de la actividad" class="mark-select">
+                        <option value="none">🚫</option>
+                        <option value="tick-green">✅</option>
+                        <option value="triangle-yellow">⚠️</option>
+                        <option value="x-red">❌</option>
+                    </select>
+                </div>
+                <button id="activityAnnotationButton" class="create-button annotation-button" title="Anotaciones de la actividad" aria-label="Anotaciones de la actividad" style="margin-left:auto; margin-right:8px;">
+                    📝
+                    <span id="activityAnnotationBadge" class="annotation-badge" style="display:none;">!</span>
+                </button>
+                <button id="editActivityButton" class="create-button" style="margin-left:0;">Editar actividad</button>
+            </div>
+            <form id="editActivityForm" class="compact-edit-form" style="display:none;">
+                <input type="text" id="editActivityName" placeholder="Nombre" required>
+                <input type="date" id="editActivityDate" required>
+                <select id="editActivityCategory">
+                    <option value="Examen">Examen</option>
+                    <option value="Deberes para casa">Deberes para casa</option>
+                    <option value="Tarea ordinaria">Tarea ordinaria</option>
+                    <option value="Tarea extra">Tarea extra</option>
+                    <option value="Práctica">Práctica</option>
+                    <option value="Proyecto">Proyecto</option>
+                    <option value="otro">Otro (especificar)</option>
+                </select>
+                <input type="text" id="editActivityCategoryOther" placeholder="Tipo personalizado" style="display:none;">
+                <select id="editActivityType">
+                    <option value="numeric_integer">Numérica (0-10 enteras o NP)</option>
+                    <option value="qualitative">Cualitativa (NP, Mal, Regular, Bien, Muy bien)</option>
+                    <option value="numeric_decimal">Numérica exacta (0-10, con 2 decimales)</option>
+                </select>
+                <textarea id="editActivityDescription" rows="2" placeholder="Descripción (opcional)"></textarea>
+                <div class="edit-actions">
+                    <button type="submit" class="create-button" id="saveActivityInfoButton">Guardar</button>
+                    <button type="button" class="back-button" id="cancelEditActivityButton">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2 id="studentListHeading">Listado de Calificaciones</h2>
+            <div class="list-tools">
+                <label class="select-all">
+                    <input type="checkbox" id="selectAllCheckbox">
+                    Marcar o Desmarcar todos
+                </label>
+                <input id="studentFilterInput" type="text" placeholder="Filtrar alumnos por nombre...">
+            </div>
+            <ul id="studentGradesList">
+                <!-- Student grade inputs and observation buttons will be loaded here by JavaScript -->
+                <li class="no-students-message">Cargando alumnos...</li>
+            </ul>
+            <div class="grades-actions">
+                <button id="saveGradesButton" class="create-button">Guardar Calificaciones</button>
+                <button id="clearAllGradesButton" class="create-button danger" style="margin-left: 10px;">Borrar calificaciones seleccionadas</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Observation Modal Structure -->
+    <div id="observationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeObservationModal">&times;</span>
+            <h2>Observaciones para <span id="modalStudentName"></span></h2>
+            <textarea id="modalObservationTextarea" rows="8" placeholder="Escribe tus observaciones aquí..."></textarea>
+            <button id="saveObservationButton" class="create-button">Guardar Observación</button>
+        </div>
+    </div>
+
+    <!-- Activity Annotation Modal Structure -->
+    <div id="activityAnnotationModal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-button" id="closeActivityAnnotationModal">&times;</span>
+            <h2>Anotaciones de la actividad <span id="modalActivityName" style="font-weight:600;"></span></h2>
+            <textarea id="activityAnnotationTextarea" rows="4" placeholder="Escribe una anotación sobre la actividad (p. ej. recordatorios, ajustes, notas para la siguiente sesión)..."></textarea>
+            <div style="margin-top:16px;"><button id="saveActivityAnnotationButton" class="create-button">Guardar Anotación</button></div>
+        </div>
+    </div>
+
+    <!-- Student Grades History Modal Structure -->
+    <div id="studentGradesHistoryModal" class="modal">
+        <button id="gradesHistoryPrevButton" class="student-nav-button prev-button" title="Alumno anterior">◀</button>
+        <div class="modal-content">
+            <span class="close-button" id="closeStudentGradesHistoryModal">&times;</span>
+            <h2>Historial de Calificaciones de <span id="modalStudentGradesName"></span></h2>
+            <div class="grades-history-table-container">
+                <table id="studentGradesHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Actividad</th>
+                            <th>Fecha</th>
+                            <th>Calificación</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentGradesHistoryTableBody">
+                        <!-- Grades will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="noGradesMessage" style="display: none; text-align: center; color: #6c757d; font-style: italic; margin-top: 20px;">No hay calificaciones registradas para este alumno en ninguna actividad.</p>
+            <div class="modal-actions">
+                <button id="studentGradesHistorySaveButton" class="create-button">Guardar cambios</button>
+            </div>
+        </div>
+        <button id="gradesHistoryNextButton" class="student-nav-button next-button" title="Siguiente alumno">▶</button>
+    </div>
+
+    <script type="module" src="grade_activity.js"></script>
+</body>
+</html>

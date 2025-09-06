@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Personal</title>
+    <link rel="stylesheet" href="groups.css">
+    <link rel="stylesheet" href="agenda.css">
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <div id="globalSaveButton" class="global-save-button">💾</div>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalDailyLogButton" class="action-button">✏️</button>
+    </div>
+    <div class="container">
+        <h1>Agenda Personal</h1>
+
+        <!-- NEW: Weekly Calendar Section -->
+        <div class="section calendar-section">
+            <div class="calendar-title-with-controls">
+                <h2>Calendario Semanal</h2>
+                <div class="header-checkboxes-group">
+                    <!-- NEW: Hide Weekend Checkbox -->
+                    <div class="form-group hide-weekend-checkbox-group">
+                        <input type="checkbox" id="hideWeekendCheckbox">
+                        <label for="hideWeekendCheckbox">Ocultar fin de semana</label>
+                    </div>
+                    <!-- NEW: Planning Mode Checkbox -->
+                    <div class="form-group planning-mode-checkbox-group">
+                        <input type="checkbox" id="planningModeCheckbox">
+                        <label for="planningModeCheckbox">Modo Planificación</label>
+                        <!-- NEW: Planning Mode Days Count Selector -->
+                        <div class="planning-days-count-group" style="display: none;">
+                            <select id="planningDaysSelect">
+                                <option value="1">1 día</option>
+                                <option value="2">2 días</option>
+                                <option value="3">3 días</option>
+                                <option value="4">4 días</option>
+                                <option value="5" selected>5 días</option>
+                                <option value="6">6 días</option>
+                                <option value="7">7 días</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- NEW: Calendar Filters -->
+            <div class="calendar-filters-container">
+                <div class="filter-group-row">
+                    <div class="form-group">
+                        <label for="calendarFilterType">Mostrar:</label>
+                        <select id="calendarFilterType">
+                            <option value="all">Todo</option>
+                            <option value="activity">Actividades</option>
+                            <option value="task">Tareas</option>
+                            <option value="meeting">Reuniones</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="calendarGroupFilterContainer" style="display: none;">
+                        <label for="calendarFilterGroup">Grupo (Actividades):</label>
+                        <select id="calendarFilterGroup" disabled>
+                            <option value="all_groups">Todos los grupos</option>
+                            <!-- Group options populated by JS -->
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group-row">
+                    <div class="form-group">
+                        <label for="calendarFilterHighlight">Destacados:</label>
+                        <select id="calendarFilterHighlight">
+                            <option value="all">Ambos</option>
+                            <option value="highlighted">Solo destacados</option>
+                            <option value="non_highlighted">Solo no destacados</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="calendar-navigation">
+                <button id="prevWeekButton" class="calendar-nav-button">←</button>
+                <button id="currentWeekButton" class="calendar-nav-button">Hoy</button>
+                <input type="date" id="datePicker" class="calendar-nav-input">
+                <h3 id="weekDisplay" class="calendar-week-display"></h3>
+                <button id="nextWeekButton" class="calendar-nav-button">→</button>
+            </div>
+            <div id="calendarGrid" class="calendar-grid">
+                <!-- Calendar header (Mon, Tue...) and day cells will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- NEW: Highlighted Agenda Items Section -->
+        <div class="section highlighted-items-section">
+            <h2>Elementos Destacados de la Agenda</h2>
+            <ul id="highlightedItemsList" class="agenda-list">
+                <!-- Highlighted items will be loaded here by JavaScript -->
+                <li class="no-highlighted-items-message">No hay elementos destacados.</li>
+            </ul>
+        </div>
+
+        <!-- NEW: Personal Notes Board Section -->
+        <div class="section personal-notes-board">
+            <h2>Tablón de Notas Personales</h2>
+            <ul id="notesList" class="agenda-list">
+                <!-- Notes will be loaded here by JavaScript -->
+            </ul>
+            <div class="form-group">
+                <label for="noteInput">Nueva Nota:</label>
+                <textarea id="noteInput" rows="5" placeholder="Escribe tu nota personal aquí..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="noteMoreInfoInput">Más Información (opcional):</label>
+                <textarea id="noteMoreInfoInput" rows="3" placeholder="Añade detalles adicionales aquí..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Color de la Nota:</label>
+                <div class="color-palette">
+                    <input type="radio" id="note-color-pastel1" name="noteColor" value="#FFC0CB" class="color-option" checked>
+                    <label for="note-color-pastel1" class="color-swatch pastel1" style="background-color: #FFC0CB;" title="Rosa Suave"></label>
+
+                    <input type="radio" id="note-color-pastel2" name="noteColor" value="#A7DBD8" class="color-option">
+                    <label for="note-color-pastel2" class="color-swatch pastel2" style="background-color: #A7DBD8;" title="Azul Turquesa"></label>
+
+                    <input type="radio" id="note-color-pastel3" name="noteColor" value="#98FB98" class="color-option">
+                    <label for="note-color-pastel3" class="color-swatch pastel3" style="background-color: #98FB98;" title="Verde Menta"></label>
+
+                    <input type="radio" id="note-color-pastel4" name="noteColor" value="#FFECB3" class="color-option">
+                    <label for="note-color-pastel4" class="color-swatch pastel4" style="background-color: #FFECB3;" title="Amarillo Crema"></label>
+
+                    <input type="radio" id="note-color-pastel5" name="noteColor" value="#E0BBE4" class="color-option">
+                    <label for="note-color-pastel5" class="color-swatch pastel5" style="background-color: #E0BBE4;" title="Lila Pastel"></label>
+
+                    <input type="radio" id="note-color-pastel6" name="noteColor" value="#FFB399" class="color-option">
+                    <label for="note-color-pastel6" class="color-swatch pastel6" style="background-color: #FFB399;" title="Melocotón"></label>
+
+                    <input type="radio" id="note-color-pastel7" name="noteColor" value="#B0E0E6" class="color-option">
+                    <label for="note-color-pastel7" class="color-swatch pastel7" style="background-color: #B0E0E6;" title="Azul Celeste"></label>
+
+                    <input type="radio" id="note-color-pastel8" name="noteColor" value="#D8BFD8" class="color-option">
+                    <label for="note-color-pastel8" class="color-swatch pastel8" style="background-color: #D8BFD8;" title="Malva Claro"></label>
+
+                    <input type="radio" id="note-color-pastel9" name="noteColor" value="#ADD8E6" class="color-option">
+                    <label for="note-color-pastel9" class="color-swatch pastel9" style="background-color: #ADD8E6;" title="Azul Bebé"></label>
+
+                    <input type="radio" id="note-color-pastel10" name="noteColor" value="#F88379" class="color-option">
+                    <label for="note-color-pastel10" class="color-swatch pastel10" style="background-color: #F88379;" title="Coral Suave"></label>
+                </div>
+                <div class="color-picker-container" title="Elige un color personalizado">
+                    <label for="noteColorPicker" class="sr-only">Color personalizado</label>
+                    <input type="color" id="noteColorPicker" class="color-picker" value="#FFC0CB">
+                </div>
+            </div>
+            <button id="addNoteButton" class="create-button">Guardar Nota</button>
+        </div>
+
+        <!-- NEW: Highlighted Dates Section -->
+        <div class="section highlighted-dates-section">
+            <div class="calendar-section-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <h2 style="margin:0;">Fechas Destacadas</h2>
+                <button class="collapsible-toggle" data-target="#highlightedDatesContent" aria-expanded="true" title="Mostrar/ocultar sección">▾</button>
+            </div>
+            <div id="highlightedDatesContent" class="collapsible-content">
+                 <form id="highlightedDateForm" class="highlighted-date-form">
+                    <div class="form-group">
+                        <label for="hdTitle">Título:</label>
+                        <input type="text" id="hdTitle" placeholder="Ej: Vacaciones Navidad" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fechas (añadir una a una):</label>
+                        <div class="hd-dates-controls">
+                            <input type="date" id="hdDateInput">
+                            <button type="button" id="hdAddDateButton" class="create-button">Añadir fecha</button>
+                        </div>
+                        <ul id="hdDatesList" class="hd-dates-list"></ul>
+                    </div>
+                    <div class="form-group">
+                        <label for="hdDescription">Descripción (opcional):</label>
+                        <textarea id="hdDescription" rows="3" placeholder="Descripción de la fecha destacada..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="hdColor">Color:</label>
+                        <input type="color" id="hdColor" value="#FFD54F">
+                    </div>
+
+                    <!-- NEW: Type selector and custom types -->
+                    <div class="form-group">
+                        <label for="hdTypeSelect">Tipo de fecha destacada:</label>
+                        <select id="hdTypeSelect">
+                            <option value="General">General</option>
+                            <!-- Custom types populated by JS -->
+                        </select>
+                        <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+                            <input type="text" id="hdNewTypeInput" placeholder="Nuevo tipo (p. ej. Vacaciones, Evaluación)">
+                            <button type="button" id="hdAddTypeButton" class="create-button">Añadir tipo</button>
+                        </div>
+                        <ul id="hdTypesList" style="margin-top:8px;"></ul>
+                    </div>
+                    <!-- NEW: Icon selector for highlighted dates -->
+                    <div class="form-group">
+                        <label>Icono:</label>
+                        <div id="hdIconCarousel" class="icon-carousel">
+                            <!-- Icons will be populated by JS -->
+                        </div>
+                        <input type="hidden" id="hdIconSelect" value="none">
+                        <div style="display:flex;gap:8px;align-items:center;margin-top:10px;">
+                            <input type="text" id="hdNewIconInput" placeholder="Nuevo icono (texto o emoji)">
+                            <button type="button" id="hdAddIconButton" class="create-button">Añadir icono</button>
+                        </div>
+                        <ul id="hdIconsList" style="margin-top:8px; display: none;"></ul>
+                        <p class="hint-text" style="display: none;">Doble clic en un icono del carrusel para eliminarlo.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="create-button">Guardar Fecha Destacada</button>
+                        <button type="button" id="hdCancelEditButton" class="back-button" style="display:none;">Cancelar edición</button>
+                    </div>
+                </form>
+
+                <h3 style="margin-top:16px;">Fechas Destacadas guardadas</h3>
+                <!-- NEW: Filters for saved highlighted dates -->
+                <div class="saved-hd-filters">
+                    <div class="form-group">
+                        <label for="hdSortSelect">Ordenar por:</label>
+                        <select id="hdSortSelect">
+                            <option value="date_asc">Fecha (pasadas antes)</option>
+                            <option value="date_desc">Fecha (futuras antes)</option>
+                            <option value="creation_asc">Creación (antes)</option>
+                            <option value="creation_desc">Creación (después)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hdTypeFilterSelect">Filtrar por tipo:</label>
+                        <select id="hdTypeFilterSelect">
+                            <option value="all">Todos los tipos</option>
+                            <!-- Types will be populated by JS -->
+                        </select>
+                    </div>
+                </div>
+                <ul id="savedHighlightedDatesList" class="agenda-list saved-highlighted-dates-list">
+                    <li class="no-highlighted-dates-message">No hay fechas destacadas.</li>
+                </ul>
+            </div><!-- /#highlightedDatesContent -->
+        </div>
+
+        <!-- NEW: Highlighted date modal (opens on long-press of calendar header) -->
+        <div id="highlightedDateModal" class="modal" style="display:none;">
+            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="hdModalTitle">
+                <button class="close-button" id="closeHighlightedDateModal" title="Cerrar"><img src="x_icon.png" alt="Cerrar" style="width:18px; height:18px" /></button>
+                <div class="modal-header">
+                    <img src="pencil_icon.png" alt="Anotaciones" class="modal-header-icon" />
+                    <div class="modal-header-text">
+                        <h2 id="hdModalTitle">Fechas Destacadas</h2>
+                        <div id="hdModalDates" class="modal-sub" style="margin-top:6px;"></div> <!-- Dates summary (clickable items) -->
+                    </div>
+                </div>
+                <div class="modal-body-grid">
+                    <div class="modal-column">
+                        <div id="hdModalDescription" style="color:#333; line-height:1.4;"></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="closeHighlightedDateModalBtn" class="create-button">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forms for adding tasks/meetings, separate from calendar display -->
+        <div class="section add-task-section">
+            <div class="calendar-section-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <h2 style="margin:0;">Añadir Tarea Pendiente</h2>
+                <button class="collapsible-toggle" data-target="#addTaskContent" aria-expanded="true" title="Mostrar/ocultar sección">▾</button>
+            </div>
+            <div id="addTaskContent" class="collapsible-content">
+                 <div class="form-group">
+                    <label for="taskInput">Tarea:</label>
+                    <input type="text" id="taskInput" placeholder="Describe tu tarea aquí...">
+                </div>
+                <div class="form-group">
+                    <label for="taskDescriptionInput">Descripción (opcional):</label>
+                    <textarea id="taskDescriptionInput" rows="3" placeholder="Detalles de la tarea..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskDateInput">Fecha Límite:</label>
+                    <input type="date" id="taskDateInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskTimeInput">Hora (opcional):</label>
+                    <input type="time" id="taskTimeInput">
+                </div>
+                <button id="addTaskButton" class="create-button">Añadir Tarea</button>
+                <ul id="pendingTasksList" class="agenda-list"></ul>
+            </div><!-- /#addTaskContent -->
+        </div>
+
+        <div class="section add-meeting-section">
+            <div class="calendar-section-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <h2 style="margin:0;">Agendar Nueva Reunión</h2>
+                <button class="collapsible-toggle" data-target="#addMeetingContent" aria-expanded="true" title="Mostrar/ocultar sección">▾</button>
+            </div>
+            <div id="addMeetingContent" class="collapsible-content">
+                 <div class="form-group">
+                    <label for="meetingNameInput">Título de la Reunión:</label>
+                    <input type="text" id="meetingNameInput" placeholder="Ej: Reunión de Padres">
+                </div>
+                <div class="form-group">
+                    <label for="meetingDateInput">Fecha:</label>
+                    <input type="date" id="meetingDateInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingTimeInput">Hora (opcional):</label>
+                    <input type="time" id="meetingTimeInput">
+                </div>
+                <div class="form-group">
+                    <label for="meetingDescriptionInput">Descripción (opcional):</label>
+                    <textarea id="meetingDescriptionInput" rows="3" placeholder="Detalles de la reunión..."></textarea>
+                </div>
+                <button id="addMeetingButton" class="create-button">Agendar Reunión</button>
+                <ul id="upcomingMeetingsList" class="agenda-list"></ul>
+            </div><!-- /#addMeetingContent -->
+        </div>
+    </div>
+
+    <!-- NEW: Edit Task Modal Structure -->
+    <div id="editTaskModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeEditTaskModal" title="Cerrar"><img src="x_icon.png" alt="Cerrar" style="width:18px; height:18px" /></button>
+
+            <div class="modal-header">
+                <img src="pencil_icon.png" alt="Editar" class="modal-header-icon" />
+                <div class="modal-header-text">
+                    <h2>Editar</h2>
+                    <div class="date-time-row">
+                        <label for="modalTaskEditDate" class="sr-only">Fecha</label>
+                        <input type="date" id="modalTaskEditDate" required>
+                        <label for="modalTaskEditTime" class="sr-only">Hora</label>
+                        <input type="time" id="modalTaskEditTime">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body-grid">
+                <div class="modal-column">
+                    <div class="form-group">
+                        <label for="modalTaskEditText">Nombre de la Tarea:</label>
+                        <input type="text" id="modalTaskEditText" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalTaskEditDescription">Descripción:</label>
+                        <textarea id="modalTaskEditDescription" rows="8" placeholder="Añade una descripción de la tarea..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="saveTaskEditButton" class="create-button"><img src="tick_icon.png" alt="" class="btn-icon" /> Guardar</button>
+                <button id="deleteTaskButtonModal" class="delete-button"><img src="x_icon.png" alt="" class="btn-icon" /> Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Edit Meeting Modal Structure -->
+    <div id="editMeetingModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeEditMeetingModal" title="Cerrar"><img src="x_icon.png" alt="Cerrar" style="width:18px; height:18px" /></button>
+
+            <div class="modal-header">
+                <img src="pencil_icon.png" alt="Editar" class="modal-header-icon" />
+                <div class="modal-header-text">
+                    <h2>Editar</h2>
+                    <div class="date-time-row">
+                        <label for="modalMeetingEditDate" class="sr-only">Fecha</label>
+                        <input type="date" id="modalMeetingEditDate" required>
+                        <label for="modalMeetingEditTime" class="sr-only">Hora</label>
+                        <input type="time" id="modalMeetingEditTime">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body-grid">
+                <div class="modal-column">
+                    <div class="form-group">
+                        <label for="modalMeetingEditName">Título de la Reunión:</label>
+                        <input type="text" id="modalMeetingEditName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalMeetingEditDescription">Descripción:</label>
+                        <textarea id="modalMeetingEditDescription" rows="8" placeholder="Añade una descripción de la reunión..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="saveMeetingEditButton" class="create-button"><img src="tick_icon.png" alt="" class="btn-icon" /> Guardar</button>
+                <button id="deleteMeetingButtonModal" class="delete-button"><img src="x_icon.png" alt="" class="btn-icon" /> Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Edit Note Modal Structure -->
+    <div id="editNoteModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeEditNoteModal" title="Cerrar"><img src="x_icon.png" alt="Cerrar" style="width:18px; height:18px" /></button>
+
+            <div class="modal-header">
+                <img src="plus_icon.png" alt="Nota" class="modal-header-icon" />
+                <div class="modal-header-text">
+                    <h2>Editar Nota Personal</h2>
+                </div>
+            </div>
+
+            <div class="modal-body-grid">
+                <div class="modal-column">
+                    <div class="form-group">
+                        <label for="modalNoteEditText">Nota:</label>
+                        <textarea id="modalNoteEditText" rows="8" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalNoteEditMoreInfo">Más Información:</label>
+                        <textarea id="modalNoteEditMoreInfo" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-column">
+                    <div class="form-group">
+                        <label>Color de la Nota:</label>
+                        <div class="color-palette modal-color-palette">
+                            <input type="radio" id="modal-note-color-pastel1" name="modalNoteEditColor" value="#FFC0CB" class="color-option">
+                            <label for="modal-note-color-pastel1" class="color-swatch pastel1" style="background-color: #FFC0CB;" title="Rosa Suave"></label>
+
+                            <input type="radio" id="modal-note-color-pastel2" name="modalNoteEditColor" value="#A7DBD8" class="color-option">
+                            <label for="modal-note-color-pastel2" class="color-swatch pastel2" style="background-color: #A7DBD8;" title="Azul Turquesa"></label>
+
+                            <input type="radio" id="modal-note-color-pastel3" name="modalNoteEditColor" value="#98FB98" class="color-option">
+                            <label for="modal-note-color-pastel3" class="color-swatch pastel3" style="background-color: #98FB98;" title="Verde Menta"></label>
+
+                            <input type="radio" id="modal-note-color-pastel4" name="modalNoteEditColor" value="#FFECB3" class="color-option">
+                            <label for="modal-note-color-pastel4" class="color-swatch pastel4" style="background-color: #FFECB3;" title="Amarillo Crema"></label>
+
+                            <input type="radio" id="modal-note-color-pastel5" name="modalNoteEditColor" value="#E0BBE4" class="color-option">
+                            <label for="modal-note-color-pastel5" class="color-swatch pastel5" style="background-color: #E0BBE4;" title="Lila Pastel"></label>
+
+                            <input type="radio" id="modal-note-color-pastel6" name="modalNoteEditColor" value="#FFB399" class="color-option">
+                            <label for="modal-note-color-pastel6" class="color-swatch pastel6" style="background-color: #FFB399;" title="Melocotón"></label>
+
+                            <input type="radio" id="modal-note-color-pastel7" name="modalNoteEditColor" value="#B0E0E6" class="color-option">
+                            <label for="modal-note-color-pastel7" class="color-swatch pastel7" style="background-color: #B0E0E6;" title="Azul Celeste"></label>
+
+                            <input type="radio" id="modal-note-color-pastel8" name="modalNoteEditColor" value="#D8BFD8" class="color-option">
+                            <label for="modal-note-color-pastel8" class="color-swatch pastel8" style="background-color: #D8BFD8;" title="Malva Claro"></label>
+
+                            <input type="radio" id="modal-note-color-pastel9" name="modalNoteEditColor" value="#ADD8E6" class="color-option">
+                            <label for="modal-note-color-pastel9" class="color-swatch pastel9" style="background-color: #ADD8E6;" title="Azul Bebé"></label>
+
+                            <input type="radio" id="modal-note-color-pastel10" name="modalNoteEditColor" value="#F88379" class="color-option">
+                            <label for="modal-note-color-pastel10" class="color-swatch pastel10" style="background-color: #F88379;" title="Coral Suave"></label>
+
+                            <!-- Custom color option (uses same pattern as groups page) -->
+                            <input type="radio" id="modal-color-custom" name="modalNoteEditColor" value="custom" class="color-option">
+                            <label for="modal-color-custom" class="color-swatch custom-swatch" title="Color personalizado" style="display:inline-flex; align-items:center; justify-content:center; font-size:0.9em; background: linear-gradient(135deg,#fff,#ccc;">🎨</label>
+                            <input type="color" id="modalCustomColor" value="#FFB399" title="Elige un color" class="custom-color-input" style="display:none; margin-left:6px; width:34px; height:34px; padding:0; border-radius:6px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="saveNoteEditButton" class="create-button"><img src="tick_icon.png" alt="" class="btn-icon" /> Guardar</button>
+                    <button id="deleteNoteButtonModal" class="delete-button"><img src="x_icon.png" alt="" class="btn-icon" /> Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Activity Details Modal Structure -->
+    <div id="activityDetailsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeActivityDetailsModal" title="Cerrar"><img src="x_icon.png" alt="Cerrar" style="width:18px; height:18px" /></button>
+
+            <div class="modal-header">
+                <div class="modal-header-text" style="text-align:left;">
+                    <h2 style="font-weight:700; margin:0;">Detalles de Actividad: <span id="modalActivityNameDisplay" style="font-weight:700;"></span></h2>
+                    <div class="date-time-row" style="margin-top:6px;">
+                        <span id="modalGroupDisplayInfo" class="modal-detail" style="font-size:0.95em; color:#556;"></span>
+                        <span id="modalActivityDateDisplay" class="modal-detail" style="font-size:0.95em; color:#556; margin-left:12px;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body-grid" style="padding:14px 18px;">
+                <div class="modal-column" style="gap:8px;">
+                    <p id="modalActivityCategoryDisplay" class="modal-detail" style="margin:0; color:#6c757d;"></p>
+                    <p id="modalActivityGradingTypeDisplay" class="modal-detail" style="margin:0; color:#6c757d;"></p>
+
+                    <div style="margin-top:10px; text-align:left;">
+                        <label style="font-weight:600;display:block;margin-bottom:6px;">Descripción:</label>
+                        <p id="modalActivityDescriptionDisplay" class="modal-detail-description" style="font-style:italic; color:#333; margin:0; max-height:220px; overflow:auto;"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="goToActivityPageButton" class="create-button"><img src="pencil_icon.png" alt="" class="btn-icon" /> Ir a la página de la actividad</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "./utils/storage.js": "./utils/storage.js",
+                "./utils/date-utils.js": "./utils/date-utils.js",
+                "./utils/backup-utils.js": "./utils/backup-utils.js"
+            }
+        }
+    </script>
+    <script type="module" src="agenda.js"></script>
+</body>
+</html>

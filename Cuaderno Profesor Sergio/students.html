@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Alumnos</title>
+    <link rel="stylesheet" href="groups.css"> 
+    <link rel="stylesheet" href="students.css">
+    <link rel="stylesheet" href="attendance.css">
+    <link rel="stylesheet" href="grade_activity.css"> <!-- Added for grade history modal styles -->
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <button id="globalSaveButton" class="global-save-button">💾</button>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalAgendaButton" class="action-button">📅</button>
+        <button id="globalDailyLogButton" class="action-button">✏️</button>
+    </div>
+    <div class="container">
+        <h1 id="groupTitle">Gestión de Alumnos</h1>
+
+        <button id="backToGroupsButton" class="back-button">← Volver a Grupos</button>
+
+        <div class="section">
+            <h2>Alumnos del Grupo</h2>
+            <div class="student-filters-container">
+                <div class="student-list-controls">
+                    <div class="form-group sort-students-group">
+                        <label for="sortSelect">Ordenar por:</label>
+                        <select id="sortSelect">
+                            <option value="manual">Orden manual</option>
+                            <option value="lastName">Apellidos, Nombre</option>
+                            <option value="firstName">Nombre, Apellidos</option>
+                        </select>
+                    </div>
+                    <div class="form-group search-students-group">
+                        <label for="searchInput">Buscar Alumno:</label>
+                        <input type="search" id="searchInput" placeholder="Buscar por nombre o apellido...">
+                    </div>
+                    <div class="form-group characteristics-filter-group">
+                        <label>Filtrar por características:</label>
+                        <div class="characteristics-checkboxes" id="characteristicsFilter">
+                            <label><input type="checkbox" id="filterACNEE" value="ACNEE"> ACNEE</label>
+                            <label><input type="checkbox" id="filterCOMPE" value="COMPE"> COMPE</label>
+                            <label><input type="checkbox" id="filterREPET" value="REPET"> REPET</label>
+                            <label><input type="checkbox" id="filterADAPT" value="ADAPT"> ADAPT</label>
+                        </div>
+                    </div>
+                    <!-- NEW: Classification Filter -->
+                    <div class="form-group classification-filter-group">
+                        <label>Filtrar por clasificación:</label>
+                        <div class="classification-filter-inputs">
+                            <select id="classificationTypeFilterSelect">
+                                <option value="all">Todos los tipos</option>
+                                <!-- Options populated by JS -->
+                            </select>
+                            <input type="text" id="classificationDescriptionFilterInput" placeholder="Buscar en descripción...">
+                            <button id="clearClassificationFilterButton" class="clear-filter-button" title="Limpiar filtro">✖</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul id="studentsList">
+                <!-- Student items will be loaded here by JavaScript -->
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Añadir Alumno Individualmente</h2>
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label for="firstName">Nombre:</label>
+                    <input type="text" id="firstName" required placeholder="Ej: Juan">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Apellidos:</label>
+                    <input type="text" id="lastName" required placeholder="Ej: Pérez">
+                </div>
+                <button type="submit" class="add-button">Añadir Alumno</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Cargar Alumnos desde Texto</h2>
+            <form id="loadStudentsForm">
+                <div class="form-group">
+                    <label for="studentsTextList">Listado de Alumnos (un alumno por línea):</label>
+                    <textarea id="studentsTextList" rows="5" placeholder="Ej:
+López, María
+García, Pedro
+Rodríguez, Ana"></textarea>
+                </div>
+                <button type="submit" class="load-button">Cargar Alumnos</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NEW: Student Info Modal Structure -->
+    <div id="studentInfoModal" class="modal" style="display: none;">
+        <button id="studentPrevButton" class="student-nav-button prev-button" title="Alumno anterior">◀</button>
+        <div class="modal-content">
+            <span class="close-button" id="closeStudentInfoModal">&times;</span>
+            
+            <h2>Información de <span id="modalStudentInfoName"></span></h2>
+            
+            <!-- NEW: Section for editing student name, hidden by default -->
+            <div id="editStudentNameSection" style="display: none;">
+                <h3>Editar Nombre y Apellidos</h3>
+                <div class="form-group">
+                    <label for="modalEditFirstName">Nombre:</label>
+                    <input type="text" id="modalEditFirstName" required placeholder="Ej: Juan">
+                </div>
+                <div class="form-group">
+                    <label for="modalEditLastName">Apellidos:</label>
+                    <input type="text" id="modalEditLastName" required placeholder="Ej: Pérez">
+                </div>
+                <div class="modal-actions stacked-buttons">
+                    <button id="saveStudentNameButton" class="create-button">Guardar Nombre</button>
+                    <button id="cancelEditNameButton" class="back-button">Cancelar</button>
+                </div>
+
+                <h3>Mover Alumno a Otro Grupo</h3>
+                <div class="form-group">
+                    <label for="modalChangeGroupSelect">Mover a:</label>
+                    <select id="modalChangeGroupSelect">
+                        <option value="">Selecciona un grupo</option>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button id="confirmMoveStudentButton" class="create-button">Mover Alumno</button>
+                </div>
+            </div>
+
+            <!-- Existing content for viewing/editing student details (observations, characteristics, attendance summary) -->
+            <div id="viewStudentDetailsSection">
+                <div class="form-group">
+                    <label for="modalStudentObservations">Observaciones:</label>
+                    <textarea id="modalStudentObservations" rows="5" placeholder="Añadir observaciones sobre el alumno..."></textarea>
+                </div>
+
+                <div class="form-group characteristics-group">
+                    <label>Características:</label>
+                    <div class="characteristics-buttons">
+                        <button type="button" id="charACNEE" data-char="ACNEE" class="char-button">ACNEE</button>
+                        <button type="button" id="charCOMPE" data-char="COMPE" class="char-button">COMPE</button>
+                        <button type="button" id="charREPET" data-char="REPET" class="char-button">REPET</button>
+                        <button type="button" id="charADAPT" data-char="ADAPT" class="char-button">ADAPT</button>
+                    </div>
+                </div>
+
+                <div class="form-group attendance-summary">
+                    <label>Faltas (filtrar):</label>
+                    <div class="attendance-filter-grid">
+                        <div class="attendance-filter-item">
+                            <label for="absenceDaysSelect">Últimos días</label>
+                            <select id="absenceDaysSelect">
+                                <option value="5">Últimos 5</option>
+                                <option value="10">Últimos 10</option>
+                                <option value="15">Últimos 15</option>
+                                <option value="20">Últimos 20</option>
+                                <option value="30" selected>Últimos 30</option>
+                                <option value="50">Últimos 50</option>
+                                <option value="all">Todos</option>
+                            </select>
+                        </div>
+                        <div class="attendance-filter-item">
+                            <label for="absenceTypeSelect">Tipo de falta</label>
+                            <select id="absenceTypeSelect">
+                                <option value="all">Todas</option>
+                                <option value="A">Ausencias (A)</option>
+                                <option value="R">Retrasos (R)</option>
+                                <option value="E">Expulsiones (E)</option>
+                                <option value="I">Incidencias (I)</option> <!-- NEW: Added Incidencias (I) -->
+                            </select>
+                        </div>
+                        <div class="attendance-filter-item">
+                            <label for="justificationFilterSelect">Justificación</label>
+                            <select id="justificationFilterSelect">
+                                <option value="all">Todos</option>
+                                <option value="justified">Justificadas</option>
+                                <option value="not_justified">No justificadas</option>
+                            </select>
+                        </div>
+                        <div id="totalFaltasContainer" class="attendance-filter-item">
+                            <label>Total faltas</label>
+                            <div class="total-faltas-display">
+                                <span id="totalFaltasCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="saveStudentDetailsButton" class="create-button">Guardar Información</button>
+                    <button id="viewAttendanceHistoryButton" class="create-button navy-button" style="margin-left: 10px;">Ver Historial de Asistencia</button>
+                    <button id="viewGradesHistoryButton" class="create-button navy-button" style="margin-left: 10px;">Ver Historial de Calificaciones</button>
+                </div>
+
+                <!-- NEW: Clasificación por (user-defined types with small description) -->
+                <div class="form-group classification-group" style="margin-top:16px;">
+                    <label style="font-weight:600;display:block;margin-bottom:8px;">Clasificación por:</label>
+                    <div id="classificationList" style="display:flex;flex-direction:column;gap:8px;">
+                        <!-- Individual classification rows populated by JS -->
+                    </div>
+                    <div style="margin-top:8px;">
+                        <button id="addClassificationButton" class="add-button" type="button" style="font-size:0.9em;padding:6px 10px;">+ Añadir tipo</button>
+                    </div>
+                    <small style="color:#6c757d;display:block;margin-top:6px;">Define tipos de clasificación y añade una breve descripción para cada uno (ej. Nivel, Comportamiento, Participación).</small>
+                </div>
+            </div>
+        </div>
+        <button id="studentNextButton" class="student-nav-button next-button" title="Siguiente alumno">▶</button>
+    </div>
+
+    <!-- NEW: Move Student Warning Modal -->
+    <div id="moveStudentWarningModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeMoveStudentWarningModal">&times;</span>
+            <h2>Advertencia al Mover Alumno</h2>
+            <div id="moveWarningMessage"></div>
+            <div class="modal-actions stacked-buttons">
+                <button id="continueMoveButton" class="create-button">Continuar (Mover)</button>
+                <button id="createReportButton" class="back-button">Crear Informe</button>
+                <button id="cancelMoveButton" class="delete-button">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Student Attendance History Modal Structure (copied from attendance.html) -->
+    <div id="studentAttendanceHistoryModal" class="modal" style="display:none;">
+        <button id="attendanceHistoryPrevButton" class="student-nav-button prev-button" title="Alumno anterior">◀</button>
+        <div class="modal-content">
+            <span class="close-button" id="closeStudentAttendanceHistoryModal">&times;</span>
+            <h2>Historial de Asistencia de <span id="modalStudentAttendanceName"></span></h2>
+
+            <div class="history-filter-options">
+                <div class="filter-option-toggle">
+                    <input type="radio" id="filterByLastDays" name="historyFilterMode" value="lastDays" checked>
+                    <label for="filterByLastDays">Últimos registros</label>
+                    <input type="radio" id="filterByDateRange" name="historyFilterMode" value="dateRange">
+                    <label for="filterByDateRange">Rango de fechas</label>
+                </div>
+                
+                <div id="lastDaysFilterControls" class="history-controls" style="display:flex;align-items:center;gap:12px;margin:12px 0;">
+                    <label for="historyDaysSelect" style="font-weight:600;">Últimos:</label>
+                    <select id="historyDaysSelect">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15" selected>15</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="all">Todos</option>
+                    </select>
+                </div>
+
+                <div id="dateRangeFilterControls" class="history-controls" style="display:none;align-items:center;gap:12px;margin:12px 0;">
+                    <label for="historyStartDate" style="font-weight:600;">Desde:</label>
+                    <input type="date" id="historyStartDate" class="date-range-input">
+                    <label for="historyEndDate" style="font-weight:600;">Hasta:</label>
+                    <input type="date" id="historyEndDate" class="date-range-input">
+                    <button id="clearDateRangeFilterButton" class="clear-filter-button" title="Limpiar filtro de fecha">✖</button>
+                </div>
+            </div>
+
+            <label for="historyStatusSelect" style="font-weight:600;margin-left:8px;">Tipo de falta:</label>
+            <select id="historyStatusSelect">
+                <option value="all">Todas</option>
+                <option value="A">Ausente (A)</option>
+                <option value="R">Retraso (R)</option>
+                <option value="P">Presente (P)</option>
+                <option value="E">Expulsado (E)</option>
+                <option value="I">Incidencia (I)</option> <!-- NEW: Added Incidencia (I) -->
+                <option value="N">No indicado (N)</option>
+            </select>
+
+            <label for="historyJustificationSelect" style="font-weight:600;margin-left:8px;">Justificación:</label>
+            <select id="historyJustificationSelect">
+                <option value="all">Todas</option>
+                <option value="justified">Justificadas</option>
+                <option value="unjustified">Injustificadas</option>
+            </select>
+
+            <div id="attendanceHistoryCountsContainer" style="margin-top: 15px; text-align: center;">
+                <div id="historyCountInfo" style="color:#6c757d;font-size:0.95em;display:none;"></div>
+                <div id="historyCountInfoDateRange" style="color:#6c757d;font-size:0.95em;display:none;"></div>
+            </div>
+
+            <div class="grades-history-table-container">
+                <table id="studentAttendanceHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Justificación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentAttendanceHistoryTableBody">
+                        <!-- Attendance records will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="noAttendanceMessage" style="display: none; text-align: center; color: #6c757d; font-style: italic; margin-top: 20px;">No hay registros de asistencia para este alumno.</p>
+            <div class="modal-actions">
+                <button id="studentAttendanceHistorySaveButton" class="create-button">Guardar cambios</button>
+            </div>
+        </div>
+        <button id="attendanceHistoryNextButton" class="student-nav-button next-button" title="Siguiente alumno">▶</button>
+    </div>
+
+    <!-- Student Grades History Modal Structure (Copied from grade_activity.html) -->
+    <div id="studentGradesHistoryModal" class="modal">
+        <button id="gradesHistoryPrevButton" class="student-nav-button prev-button" title="Alumno anterior">◀</button>
+        <div class="modal-content">
+            <span class="close-button" id="closeStudentGradesHistoryModal">&times;</span>
+            <h2>Historial de Calificaciones de <span id="modalStudentGradesName"></span></h2>
+            <div class="grades-history-table-container">
+                <table id="studentGradesHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Actividad</th>
+                            <th>Fecha</th>
+                            <th>Calificación</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentGradesHistoryTableBody">
+                        <!-- Grades will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="noGradesMessage" style="display: none; text-align: center; color: #6c757d; font-style: italic; margin-top: 20px;">No hay calificaciones registradas para este alumno en ninguna actividad.</p>
+            <div class="modal-actions">
+                <button id="studentGradesHistorySaveButton" class="create-button">Guardar cambios</button>
+            </div>
+        </div>
+        <button id="gradesHistoryNextButton" class="student-nav-button next-button" title="Siguiente alumno">▶</button>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "./utils/storage.js": "./utils/storage.js",
+                "./utils/date-utils.js": "./utils/date-utils.js",
+                "./utils/backup-utils.js": "./utils/backup-utils.js",
+                "./utils/grades-history-modal.js": "./utils/grades-history-modal.js"
+            }
+        }
+    </script>
+    <script type="module" src="students.js"></script>
+</body>
+</html>

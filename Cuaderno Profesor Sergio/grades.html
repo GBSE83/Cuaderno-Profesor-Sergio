@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Calificaciones</title>
+    <link rel="stylesheet" href="groups.css">
+    <link rel="stylesheet" href="grades.css">
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <button id="globalSaveButton" class="global-save-button">💾</button>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalAgendaButton" class="action-button">📅</button>
+        <button id="globalDailyLogButton" class="action-button">✏️</button>
+    </div>
+    <div class="container">
+        <h1>Actividades y Calificaciones</h1>
+
+        <div class="section">
+            <h2>Seleccionar Grupo</h2>
+            <div class="form-group">
+                <label for="groupSelect">Grupo:</label>
+                <select id="groupSelect" required>
+                    <option value="">Selecciona un grupo</option>
+                </select>
+            </div>
+            <p id="groupInfoDisplay"></p>
+        </div>
+
+        <div class="section">
+            <div class="section-header-with-button">
+                <h2>Actividades del Grupo</h2>
+                <button id="goToCreateActivityButton" class="create-button" type="button">Nueva Actividad</button>
+            </div>
+            <!-- NEW: Filters and Sorting Controls -->
+            <div id="activitiesControlsContainer" class="activities-controls-container" style="display: none;">
+                <div class="form-group search-group">
+                    <label for="activitySearchInput">Buscar Actividad:</label>
+                    <input type="search" id="activitySearchInput" placeholder="Buscar por nombre o descripción...">
+                </div>
+                <div class="form-group date-filter-group">
+                    <label>Filtrar por Fecha:</label>
+                    <div class="date-inputs">
+                        <input type="date" id="startDateFilter" title="Fecha de inicio">
+                        <span>-</span>
+                        <input type="date" id="endDateFilter" title="Fecha de fin">
+                        <button id="clearDateFilterButton" class="clear-filter-button" title="Limpiar filtro de fecha">✖</button>
+                    </div>
+                </div>
+                <!-- NEW: Filter by Activity Category -->
+                <div class="form-group category-filter-group">
+                    <label for="activityCategoryFilter">Filtrar por Tipo:</label>
+                    <select id="activityCategoryFilter">
+                        <option value="all">Todas las categorías</option>
+                        <!-- Categories will be populated by JS -->
+                    </select>
+                </div>
+                <div class="form-group sort-group">
+                    <label for="sortSelect">Ordenar por:</label>
+                    <select id="sortSelect" class="sort-button" title="Ordenar actividades">
+                        <option value="date_desc">Fecha (futuras primero)</option>
+                        <option value="date_asc">Fecha (pasadas primero)</option>
+                        <option value="created_asc">Creación (antes)</option>
+                        <option value="created_desc">Creación (después)</option>
+                    </select>
+                </div>
+            </div>
+            <ul id="activitiesList">
+                <!-- Activity items will be loaded here by JavaScript -->
+                <li class="no-activities-message">Selecciona un grupo para ver las actividades.</li>
+            </ul>
+        </div>
+
+        <div class="section" id="createActivitySection">
+            <h2>Crear Nueva Actividad</h2>
+            <form id="createActivityForm">
+                <div class="form-group">
+                    <label for="activityName">Nombre de la Actividad:</label>
+                    <input type="text" id="activityName" required placeholder="Ej: Examen Unidad 1">
+                </div>
+                <div class="form-group">
+                    <label for="activityDescription">Descripción:</label>
+                    <textarea id="activityDescription" rows="3" placeholder="Ej: Evaluación de los temas 1, 2 y 3."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="activityCategory">Tipo de Actividad:</label>
+                    <select id="activityCategory" required>
+                        <option value="Examen">Examen</option>
+                        <option value="Deberes para casa">Deberes para casa</option>
+                        <option value="Tarea ordinaria">Tarea ordinaria</option>
+                        <option value="Tarea extra">Tarea extra</option>
+                        <option value="Práctica">Práctica</option>
+                        <option value="Proyecto">Proyecto</option>
+                        <option value="otro">Otro (especificar)</option>
+                    </select>
+                    <input type="text" id="activityCategoryOther" style="display: none; margin-top: 10px;" placeholder="Escribe el tipo de actividad personalizado">
+                </div>
+
+                <!-- NEW: List of custom activity categories with delete option -->
+                <div class="form-group" id="customActivityCategoriesSection" style="margin-top:10px;">
+                    <label>Tipos personalizados guardados:</label>
+                    <ul id="customActivityCategoriesList">
+                        <li class="no-activities-message">Aún no hay tipos personalizados de actividad.</li>
+                    </ul>
+                    <p class="hint-text">Haz doble clic sobre un tipo o pulsa Eliminar para quitarlo de la lista.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="activityDate">Fecha:</label>
+                    <input type="date" id="activityDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="activityType">Tipo de Calificación:</label>
+                    <select id="activityType" required>
+                        <option value="numeric_integer">Numérica (0-10 enteras o NP)</option>
+                        <option value="qualitative">Cualitativa (NP, Mal, Regular, Bien, Muy bien)</option>
+                        <option value="numeric_decimal">Numérica exacta (0-10, con 2 decimales)</option>
+                    </select>
+                </div>
+                <button type="submit" class="create-button" id="submitActivityButton">Crear Actividad</button>
+                <button type="button" class="back-button" id="cancelEditButton" style="margin-left: 10px;">Cancelar Edición</button>
+            </form>
+        </div>
+
+        <div class="section" id="duplicateActivitySection" style="display:none;">
+            <h2>Duplicar Actividad: <span id="activityToDuplicateName" style="font-weight: normal;"></span></h2>
+            <div class="form-group">
+                <label for="duplicateTargetGroupSelect">Duplicar en Grupo:</label>
+                <select id="duplicateTargetGroupSelect" required>
+                    <option value="">Selecciona un grupo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="keepGradesCheckbox" checked>
+                <label for="keepGradesCheckbox" style="display: inline-block; margin-left: 5px;">Mantener calificaciones en la actividad duplicada</label>
+            </div>
+            <button type="button" class="create-button" id="confirmDuplicateButton">Confirmar Duplicación</button>
+            <button type="button" class="back-button" id="cancelDuplicateButton" style="margin-left: 10px;">Cancelar</button>
+        </div>
+
+        <div class="section" id="customGradingTypesSection">
+            <h2>Nuevos tipos de calificación</h2>
+            <form id="customTypeForm">
+                <div class="form-group">
+                    <label for="customTypeName">Nombre del tipo:</label>
+                    <input type="text" id="customTypeName" placeholder="Ej: Rúbrica de Presentación" required>
+                </div>
+                <div class="form-group">
+                    <label for="customTypeTemplate">Plantilla:</label>
+                    <select id="customTypeTemplate" required>
+                        <option value="value_list">Lista de valores (separados por comas)</option>
+                        <option value="rubric">Rúbrica (ítems 0-10 con peso)</option>
+                        <option value="emoji_faces">Caritas descriptivas</option>
+                        <option value="letter_scale">Escala de letras (A-F)</option>
+                        <option value="binary">Binaria (Sí/No)</option>
+                        <option value="attendance3">Asistencia (Presente/Tarde/Ausente)</option>
+                        <option value="points_total">Puntos totales (0 a N)</option>
+                        <option value="number_range">Número (rango y decimales)</option>
+                        <option value="mixed">Mixta (icono y número)</option>
+                    </select>
+                </div>
+                
+                <!-- NEW: Mixed (icon + number) Config -->
+                <div class="form-group" id="mixedConfig" style="display:none;">
+                    <label>Configuración Mixta (Icono + Número):</label>
+                    <div style="display:grid;gap:8px;">
+                        <input type="text" id="mixedIconsList" placeholder="Iconos, separados por comas (ej: ⭐,🔥,💡)" />
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <input type="number" id="mixedMin" value="0" step="1" style="width:80px;" /> <span>mín</span>
+                            <input type="number" id="mixedMax" value="10" step="1" style="width:80px;" /> <span>máx</span>
+                            <input type="number" id="mixedDecimals" value="0" min="0" step="1" style="width:80px;" /> <span>decimales</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="valueListConfig" style="display:none;">
+                    <label for="valueListInput">Valores (separados por comas):</label>
+                    <input type="text" id="valueListInput" placeholder="Ej: NP, Insuficiente, Suficiente, Bien, Notable, Sobresaliente">
+                </div>
+
+                <div class="form-group" id="rubricConfig" style="display:none;">
+                    <div class="rubric-items-header">
+                        <span>Ítems de la rúbrica</span>
+                        <button type="button" id="addRubricItemButton" class="create-button">+ Añadir ítem</button>
+                    </div>
+                    <ul id="rubricItemsList"></ul>
+                    <p id="rubricTotalWeightHint" class="hint-text">Peso total: <span id="rubricTotalWeight">0</span>% (debe sumar 100%)</p>
+                </div>
+
+                <div class="form-group" id="emojiFacesConfig" style="display:none;">
+                    <label>Conjunto de caritas:</label>
+                    <select id="emojiPreset">
+                        <option value="3">Triste 😞 | Neutro 😐 | Contento 🙂</option>
+                        <option value="5">Muy mal 😣 | Mal 😕 | Regular 😐 | Bien 🙂 | Genial 😄</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="letterScaleConfig" style="display:none;">
+                    <label>Escala:</label>
+                    <select id="letterScalePreset">
+                        <option value="A-F">A, B, C, D, E, F</option>
+                        <option value="A-E">A, B, C, D, E</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="binaryConfig" style="display:none;">
+                    <label>Etiquetas:</label>
+                    <div class="binary-grid">
+                        <input type="text" id="binaryYes" placeholder="Sí" value="Sí">
+                        <input type="text" id="binaryNo" placeholder="No" value="No">
+                    </div>
+                </div>
+
+                <div class="form-group" id="attendance3Config" style="display:none;">
+                    <label>Etiquetas:</label>
+                    <div class="attendance-grid">
+                        <input type="text" id="attPresent" placeholder="Presente" value="Presente">
+                        <input type="text" id="attLate" placeholder="Tarde" value="Tarde">
+                        <input type="text" id="attAbsent" placeholder="Ausente" value="Ausente">
+                    </div>
+                </div>
+
+                <div class="form-group" id="pointsTotalConfig" style="display:none;">
+                    <label for="pointsMax">Puntos máximos:</label>
+                    <input type="number" id="pointsMax" min="1" step="1" value="10">
+                </div>
+                
+                <!-- NEW: Number Range Config -->
+                <div class="form-group" id="numberRangeConfig" style="display:none;">
+                    <label>Rango, decimales, valor inicial y paso:</label>
+                    <div class="numeric-range-grid">
+                        <div class="numeric-input-wrapper">
+                            <input type="number" id="numberRangeMin" placeholder="Mínimo" value="0" step="any">
+                            <span class="range-hint">Mín.</span>
+                        </div>
+                        <div class="numeric-input-wrapper">
+                            <input type="number" id="numberRangeMax" placeholder="Máximo" value="10" step="any">
+                            <span class="range-hint">Máx.</span>
+                        </div>
+                        <div class="numeric-input-wrapper">
+                            <input type="number" id="numberRangeDecimals" placeholder="Decimales" value="2" min="0" step="1">
+                            <span class="range-hint">Dec.</span>
+                        </div>
+                        <div class="numeric-input-wrapper">
+                            <input type="number" id="numberRangeStart" placeholder="Inicio" value="" step="any">
+                            <span class="range-hint">Inicio</span>
+                        </div>
+                        <div class="numeric-input-wrapper">
+                            <input type="number" id="numberRangeStep" placeholder="Paso" value="1" min="0" step="any">
+                            <span class="range-hint">Paso</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="create-button">Guardar tipo</button>
+                <button type="button" id="cancelCustomTypeEditButton" class="back-button" style="margin-left:10px; display:none;">Cancelar</button>
+            </form>
+
+            <h3 style="margin-top:24px;">Tipos personalizados guardados</h3>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+                <button id="downloadCustomTypesBtn" class="create-button" style="padding:8px 12px;">Descargar tipos (.txt)</button>
+                <label for="uploadCustomTypesFile" class="create-button" style="padding:8px 12px; cursor:pointer;">
+                    Cargar tipos (.txt/.json)
+                    <input type="file" id="uploadCustomTypesFile" accept=".txt, .json" style="display:none;">
+                </label>
+            </div>
+            <ul id="customTypesList">
+                <li class="no-activities-message">Aún no hay tipos personalizados.</li>
+            </ul>
+        </div>
+    </div>
+    <script type="module" src="grades.js"></script>
+</body>
+</html>

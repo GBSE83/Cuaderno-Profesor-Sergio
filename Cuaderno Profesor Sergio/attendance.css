@@ -1,0 +1,822 @@
+/* Inherits general styles from groups.css */
+
+.container {
+    max-width: 900px; /* Slightly wider container for attendance */
+}
+
+h1 {
+    /* Keeping the default h1 styling from groups.css, which gets overridden by JS with group color */
+}
+
+.section {
+    padding: 20px; /* Make sections more compact */
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group select,
+.form-group input[type="date"] {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    margin-bottom: 15px; /* Add some spacing */
+}
+
+.form-group select:focus,
+.form-group input[type="date"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* NEW: Wrapper for group select and filters */
+.group-and-filters-wrapper {
+    display: flex;
+    flex-direction: column; /* Stack vertically by default */
+    gap: 20px; /* Space between group select and filters */
+}
+
+.group-select-wrapper label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.group-select-wrapper select {
+    width: 100%; /* Ensure select takes full width */
+    padding: 12px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* NEW: Container for horizontal filters (date, search, status) */
+.horizontal-filters-container {
+    display: grid; /* Use CSS Grid for better alignment */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Auto-fit columns, min 250px */
+    gap: 15px; /* Space between filter groups */
+    padding: 15px;
+    background-color: #e6f7ff; /* Light blue background for filters */
+    border-radius: 8px;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.05);
+    border: 1px solid #d0e8f8; /* Softer border */
+}
+
+.horizontal-filters-container .form-group {
+    margin-bottom: 0; /* Remove default form-group margin */
+}
+
+.date-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%; /* Ensure it takes full width of its grid cell */
+}
+
+.date-selector .date-nav-button {
+    background: #f1f3f5;
+    border: 1px solid #ced4da;
+    color: #333;
+    padding: 6px 8px; /* Slightly smaller padding */
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    line-height: 1;
+    height: 38px; /* Fixed height for consistency */
+    flex-shrink: 0; /* Prevent shrinking */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.date-selector .date-nav-button:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+}
+
+.date-selector input[type="date"] {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px; /* Slightly smaller padding */
+    height: 38px; /* Fixed height for consistency */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.form-group.search-students-group input[type="search"] {
+    width: 100%; /* Ensure it takes full width of its grid cell */
+    padding: 8px 10px; /* Smaller padding */
+    height: 38px; /* Fixed height for consistency */
+    box-sizing: border-box;
+    margin-bottom: 0; /* No bottom margin */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.form-group.search-students-group input[type="search"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* NEW: Styles for the attendance status filter checkboxes (pill-like buttons) */
+.attendance-status-filter-group {
+    /* No margin top/bottom, managed by grid gap */
+}
+
+.attendance-status-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* Smaller gap between pills */
+    margin-top: 8px;
+    justify-content: flex-start;
+}
+
+.attendance-status-checkboxes input[type="checkbox"] {
+    display: none; /* Hide default checkbox */
+}
+
+.attendance-status-checkboxes label {
+    background-color: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 20px; /* Pill shape */
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #ced4da;
+    font-weight: normal;
+    color: #555;
+    margin-bottom: 0; /* Override default label margin */
+    flex-shrink: 0; /* Prevent labels from shrinking */
+    text-transform: uppercase; /* Make status letters uppercase */
+    font-weight: bold;
+    font-size: 0.85em; /* Slightly smaller font */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.attendance-status-checkboxes input[type="checkbox"]:checked + label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Specific colors for status filter labels when checked */
+.attendance-status-checkboxes input[type="checkbox"][value="P"]:checked + label { background-color: #28a745; border-color: #28a745; }
+.attendance-status-checkboxes input[type="checkbox"][value="A"]:checked + label { background-color: #dc3545; border-color: #dc3545; }
+.attendance-status-checkboxes input[type="checkbox"][value="R"]:checked + label { background-color: #ffc107; border-color: #ffc107; color: #333; }
+.attendance-status-checkboxes input[type="checkbox"][value="E"]:checked + label { background-color: #6f42c1; border-color: #6f42c1; }
+.attendance-status-checkboxes input[type="checkbox"][value="N"]:checked + label { background-color: #6c757d; border-color: #6c757d; }
+.attendance-status-checkboxes input[type="checkbox"][value="all"]:checked + label { background-color: #007bff; border-color: #007bff; }
+/* NEW: Color for 'I' (Incidencia) */
+.attendance-status-checkboxes input[type="checkbox"][value="I"]:checked + label { background-color: #8B4513; border-color: #8B4513; } /* SaddleBrown */
+
+#groupInfoDisplay {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 20px;
+    padding: 10px; /* Add padding for better visual separation */
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+#attendanceStudentsList {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#attendanceStudentsList li {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px 15px; /* More compact padding */
+    margin-bottom: 8px; /* Reduced margin */
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of elements */
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#attendanceStudentsList li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.student-name {
+    font-weight: bold;
+    color: #333;
+    flex-grow: 1;
+    margin-right: 15px;
+    cursor: pointer; /* Indicate clickability for history modal */
+    text-decoration: underline; /* Visual cue for clickability */
+    transition: color 0.2s ease;
+    overflow: hidden; /* Hide overflowing text */
+    white-space: nowrap; /* Keep text on a single line */
+    text-overflow: ellipsis; /* Add ellipsis for truncated text */
+    display: inline-block; /* Ensure truncation behaves consistently inside flex containers */
+    max-width: 60%; /* Prevent name from taking all space and allow controls to remain visible */
+}
+
+.student-name:hover {
+    color: #007bff; /* Highlight on hover */
+}
+
+.attendance-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between checkbox and status button */
+    flex-shrink: 0; /* Prevent controls from shrinking */
+    margin-top: 0;
+}
+
+.attendance-status-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Make it round */
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.attendance-status-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific colors for each status */
+.status-P { background-color: #28a745; } /* Presente - Green */
+.status-A { background-color: #dc3545; } /* Ausente - Red */
+.status-R { background-color: #ffc107; color: #333; } /* Retraso - Yellow */
+.status-E { background-color: #6f42c1; } /* Expulsado - Purple */
+.status-N { background-color: #6c757d; } /* No indicado - Grey */
+/* NEW: Color for 'I' (Incidencia) */
+.status-I { background-color: #8B4513; } /* SaddleBrown */
+
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* reuse colors */
+.status-chip.status-P { background-color: #28a745; }
+.status-chip.status-A { background-color: #dc3545; }
+.status-chip.status-R { background-color: #ffc107; color: #333; }
+.status-chip.status-E { background-color: #6f42c1; }
+.status-chip.status-N { background-color: #6c757d; }
+/* NEW: Color for 'I' (Incidencia) */
+.status-chip.status-I { background-color: #8B4513; } /* SaddleBrown */
+
+.justified-checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9em; /* Slightly smaller font */
+    color: #555;
+    user-select: none;
+    position: relative; /* For custom checkbox */
+    padding-left: 28px; /* Space for custom checkbox */
+    flex-shrink: 0;
+}
+
+/* Custom checkbox styles */
+.justified-checkbox-container input[type="checkbox"] {
+    /* Hide the default checkbox */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+/* Changed: use pseudo elements on the label itself (label has the class) */
+.justified-checkbox-container::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px; /* Size of custom checkbox */
+    height: 18px;
+    border: 2px solid #007bff; /* Blue border for unchecked state */
+    border-radius: 4px;
+    background-color: #fff;
+    transition: background-color 0.2s, border-color 0.2s;
+    box-sizing: border-box;
+}
+
+/* When the hidden input is checked, style the label's ::before and add a check mark via ::after */
+.justified-checkbox-container input[type="checkbox"]:checked + /* no sibling label in markup */ /* keep for specificity fallback */ .justified-checkbox-container::before,
+.justified-checkbox-container input[type="checkbox"]:checked ~ .justified-checkbox-container::before {
+    /* Fallback selectors (kept harmless) */
+}
+.justified-checkbox-container input[type="checkbox"]:checked + label::before { /* harmless legacy selector kept */ }
+
+/* The real rule targeting the structure where the input is a child of the label */
+.justified-checkbox-container input[type="checkbox"]:checked + /* placeholder */ /* this line intentionally left minimal for parsing */ {}
+
+/* Proper checked state using :has (broad support in modern browsers) and a fallback */
+.justified-checkbox-container:has(input[type="checkbox"]:checked)::before {
+    background-color: #007bff; /* Blue background when checked */
+    border-color: #007bff;
+}
+.justified-checkbox-container:has(input[type="checkbox"]:checked)::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px; /* Size of the tick image */
+    height: 10px;
+    background-image: url('tick_icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Fallback for browsers without :has — show a visible check by lowering opacity of the box (non-perfect) */
+@supports not (selector(:has(*))) {
+    .justified-checkbox-container input[type="checkbox"]:checked ~ .justified-checkbox-container::before,
+    .justified-checkbox-container input[type="checkbox"]:checked + .justified-checkbox-container::before {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .justified-checkbox-container input[type="checkbox"]:checked ~ .justified-checkbox-container::after,
+    .justified-checkbox-container input[type="checkbox"]:checked + .justified-checkbox-container::after {
+        content: '';
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+        background-image: url('tick_icon.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}
+
+/* Style for disabled justified checkbox container */
+.justified-checkbox-container.disabled-checkbox {
+    opacity: 0.6; /* Visually dim the disabled checkbox and label */
+    cursor: not-allowed; /* Indicate it's not interactive */
+}
+
+.justified-checkbox-container.disabled-checkbox label {
+    cursor: not-allowed;
+}
+
+.justified-checkbox-container.disabled-checkbox label::before {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.justified-checkbox-container.disabled-checkbox input[type="checkbox"]:checked + label::before {
+    background-color: #9abed6;
+    border-color: #9abed6;
+}
+
+.justified-checkbox-container.disabled-checkbox input[type="checkbox"]:checked + label::after {
+    opacity: 0.6;
+}
+
+/* Styles for when checkbox input is disabled */
+.justified-checkbox-container input[type="checkbox"]:disabled {
+    cursor: not-allowed; /* Explicitly set cursor for disabled input */
+}
+
+.no-students-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* NEW: Styles for action buttons at the bottom */
+.attendance-actions.top-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically align items */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    gap: 15px; /* Space between buttons */
+    margin-top: 30px; /* Space above buttons */
+    padding-top: 20px; /* Internal padding */
+    border-top: 1px solid #e9ecef; /* Separator line */
+}
+
+/* Style for the Save button (blue) */
+.attendance-actions .action-button-save { /* NEW class for save button */
+    background-color: #007bff; /* Blue */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Standard button corners */
+    padding: 10px 20px; /* Standard button padding */
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    min-width: 140px; /* Make it a reasonable width */
+    height: 40px; /* Standard button height */
+    flex-shrink: 0; /* Prevent from shrinking */
+}
+.attendance-actions .action-button-save:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* The 'mark all' buttons inherit from .attendance-status-button for color/shape/size */
+/* No specific styles needed here other than ensuring they are part of the flex container */
+
+/* Responsive adjustments for top-actions */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .section {
+        padding: 15px;
+    }
+
+    .group-and-filters-wrapper {
+        gap: 15px;
+    }
+
+    .horizontal-filters-container {
+        grid-template-columns: 1fr; /* Stack filters vertically on small screens */
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .date-selector {
+        flex-wrap: wrap; /* Allow buttons and input to wrap */
+        gap: 5px;
+    }
+    .date-selector .date-nav-button {
+        flex-grow: 1; /* Allow buttons to take more space */
+        min-width: unset;
+        height: 36px;
+    }
+    .date-selector input[type="date"] {
+        flex-grow: 1;
+        width: 100%;
+        height: 36px;
+    }
+
+    .form-group.search-students-group input[type="search"] {
+        height: 36px;
+    }
+
+    .attendance-status-checkboxes {
+        justify-content: center;
+        gap: 5px;
+    }
+    .attendance-status-checkboxes label {
+        padding: 6px 10px;
+        font-size: 0.75em;
+    }
+
+    #groupInfoDisplay {
+        font-size: 1em;
+        padding: 8px;
+    }
+
+    #attendanceStudentsList li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 10px;
+    }
+
+    .student-name {
+        margin-bottom: 8px;
+        margin-right: 0;
+        width: 100%;
+        white-space: normal; /* Allow wrapping */
+        overflow: hidden; /* Ensure overflow hidden for ellipsis */
+        text-overflow: ellipsis; /* Apply ellipsis to truncated text */
+    }
+
+    .attendance-controls {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 5px;
+        flex-wrap: wrap; /* Allow wrapping */
+    }
+    .justified-checkbox-container {
+        padding-left: 24px; /* Adjust padding for smaller custom checkbox */
+        font-size: 0.85em;
+    }
+    .justified-checkbox-container label::before {
+        width: 16px;
+        height: 16px;
+    }
+    .justified-checkbox-container input[type="checkbox"]:checked + label::after {
+        left: 3px;
+        width: 10px;
+        height: 10px;
+    }
+    .attendance-status-button {
+        width: 36px;
+        height: 36px;
+        font-size: 1em;
+    }
+
+    .attendance-actions.top-actions { /* Target the new container for responsive adjustments */
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        gap: 10px;
+    }
+    .attendance-actions .action-button-save,
+    .attendance-actions .mark-all-action-button { /* Target both save and mark-all buttons */
+        max-width: none;
+        min-width: unset;
+        width: 100%; /* Take full width */
+        height: 42px; /* Standard button height for stacked appearance */
+        font-size: 1em;
+        border-radius: 8px; /* Make all buttons rectangular/pill-shaped when stacked */
+        /* For circular buttons, this overrides border-radius: 50% */
+        padding: 0 10px; /* Add some horizontal padding for text */
+    }
+}
+
+/* Responsive for tables (reusing grade_activity.css pattern) */
+@media (max-width: 768px) {
+    /* ...existing table responsive styles... */
+
+    #studentAttendanceHistoryTable thead tr {
+        position: static;
+        top: auto;
+        left: auto;
+    }
+    #studentAttendanceHistoryTable tr {
+        border-radius: 0; /* keep cardless rows on mobile */
+        background-color: #ffffff;
+    }
+    #studentAttendanceHistoryTable td {
+        padding-left: 8px;
+        text-align: left;
+    }
+    #studentAttendanceHistoryTable td:before { content: none !important; }
+}
+
+@media (max-width: 768px) {
+    #studentAttendanceHistoryTable {
+        width: 100%;
+        table-layout: auto;
+    }
+    #studentAttendanceHistoryTable td:nth-child(1) { /* Fecha */
+        white-space: nowrap;
+        width: 1%;
+    }
+    #studentAttendanceHistoryTable td:nth-child(2) { /* Estado */
+        text-align: center;
+        width: 1%;
+    }
+    #studentAttendanceHistoryTable td:nth-child(3) { /* Justificación */
+        text-align: center;
+        width: auto; /* grows to fill remaining space */
+    }
+}
+
+/* Small styles for history selector and info in modal */
+.history-controls select {
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    background: #fff;
+    font-size: 0.95em;
+}
+
+/* NEW: Styles for history filter options */
+.history-filter-options {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+.filter-option-toggle {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.filter-option-toggle input[type="radio"] {
+    display: none;
+}
+
+.filter-option-toggle label {
+    background-color: #e9ecef;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #ced4da;
+    font-weight: 500;
+    color: #555;
+}
+
+.filter-option-toggle input[type="radio"]:checked + label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.history-controls .date-range-input {
+    width: 130px; /* Adjust width for date inputs */
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.history-controls .clear-filter-button {
+    background-color: #dc3545; /* Red, like a delete action */
+    color: white;
+    border: none;
+    border-radius: 6px; /* Slightly rounded */
+    width: 28px; /* Fixed width for icon-like button */
+    height: 28px; /* Fixed height */
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex; /* Center the '✖' */
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent it from shrinking */
+    padding: 0; /* Remove default padding */
+}
+
+.history-controls .clear-filter-button:hover {
+    background-color: #c82333;
+}
+
+/* Responsive adjustments for status checkboxes */
+@media (max-width: 768px) {
+    .attendance-status-checkboxes {
+        flex-direction: row; /* Keep them in a row, allow wrapping */
+        justify-content: flex-start;
+        gap: 8px; /* Slightly smaller gap */
+    }
+    .attendance-status-checkboxes label {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+    .filter-option-toggle {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .history-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .history-controls label {
+        width: 100%;
+        text-align: center;
+    }
+    .history-controls .date-range-input {
+        flex-grow: 1;
+        width: auto;
+    }
+    .history-controls .clear-filter-button {
+        margin-top: 10px;
+    }
+}
+
+/* NEW: Limit height of attendance history table to 6 records */
+#studentAttendanceHistoryModal .grades-history-table-container {
+    max-height: 270px; /* Approx 6 rows * 45px per row */
+    overflow-y: auto;
+}
+
+/* NEW: Container for horizontal filters */
+.horizontal-filters-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 20px; /* Space between the two filter groups */
+    margin-bottom: 15px; /* Space below this container */
+    align-items: flex-end; /* Align inputs/buttons at the bottom */
+}
+
+/* Adjust the individual form-groups within this container */
+.horizontal-filters-container .form-group {
+    flex: 1 1 calc(50% - 10px); /* Allow each to take roughly half width, adjusting for gap */
+    min-width: 280px; /* Ensure a minimum width before wrapping */
+    margin-bottom: 0; /* Remove default form-group margin */
+}
+
+/* Ensure inputs and date-selector take full width of their parent .form-group */
+.horizontal-filters-container .form-group input[type="date"],
+.horizontal-filters-container .form-group .date-selector,
+.horizontal-filters-container .form-group input[type="search"] {
+    width: 100%; /* Override default `width: calc(100% - 20px)` from global styles */
+    box-sizing: border-box; /* Re-apply box-sizing to account for padding/border */
+}
+
+/* The date-selector itself needs its max-width removed to take up full available width */
+.date-selector {
+    max-width: none; /* Remove max-width when inside horizontal-filters-container */
+}
+
+/* NEW: Styles for student navigation buttons on the sides of the modal */
+#studentAttendanceHistoryModal.modal {
+    /* Removed `display: flex;` from here to prevent modal opening on page load */
+    justify-content: center;
+    align-items: center;
+}
+
+#studentAttendanceHistoryModal .student-nav-button {
+    background-color: rgba(0, 123, 255, 0.6);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 1001;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+#studentAttendanceHistoryModal .student-nav-button.prev-button {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+#studentAttendanceHistoryModal .student-nav-button.next-button {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+#studentAttendanceHistoryModal .student-nav-button:hover {
+    background-color: rgba(0, 123, 255, 0.8);
+    transform: none;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+@media (min-width: 769px) {
+    /* Make history table columns occupy the full width and center content on desktop */
+    #studentAttendanceHistoryTable {
+        width: 100%;
+        table-layout: fixed; /* Ensure columns follow defined widths */
+    }
+    #studentAttendanceHistoryTable thead th,
+    #studentAttendanceHistoryTable tbody td {
+        text-align: center;
+        vertical-align: middle;
+        padding: 12px 8px;
+    }
+    /* Distribute widths more evenly and allow justification column to expand slightly if needed */
+    #studentAttendanceHistoryTable th:nth-child(1), #studentAttendanceHistoryTable td:nth-child(1) { width: 34%; }
+    #studentAttendanceHistoryTable th:nth-child(2), #studentAttendanceHistoryTable td:nth-child(2) { width: 22%; }
+    #studentAttendanceHistoryTable th:nth-child(3), #studentAttendanceHistoryTable td:nth-child(3) { width: 44%; }
+}
+
+@media (max-width: 768px) {
+    #studentAttendanceHistoryModal .student-nav-button {
+        width: 30px;
+        font-size: 1.8em;
+    }
+}

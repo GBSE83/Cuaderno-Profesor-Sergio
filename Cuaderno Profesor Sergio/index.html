@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Alumnos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <div id="globalSaveButton" class="global-save-button">💾</div>
+    </div>
+    <div class="container">
+        <div class="header-with-button">
+            <button id="dailyLogButton" class="action-button">✏️</button>
+            <h1>Cuaderno del Profesor</h1>
+            <button id="agendaButton" class="action-button">📅</button>
+        </div>
+        <div class="button-grid">
+            <button class="main-button" id="groupsButton">
+                <span class="button-icon">👫</span>
+                <span class="button-text">Gestión de Grupos y Alumnos</span>
+            </button>
+            <button class="main-button" id="attendanceButton">
+                <span class="button-icon">✅</span>
+                <span class="button-text">Control de asistencia</span>
+            </button>
+            <button class="main-button" id="gradesButton">
+                <span class="button-icon">💯</span>
+                <span class="button-text">Actividades y Calificaciones</span>
+            </button>
+            <button class="main-button" id="reportsButton">
+                <span class="button-icon">📄</span>
+                <span class="button-text">Informes</span>
+            </button>
+        </div>
+        <!-- Removed direct destructive buttons; access via Settings -->
+        <div class="settings-access-container" aria-hidden="false">
+            <button id="openSettingsButton" class="settings-gear" title="Ajustes (Restaurar / Copias)">⚙️</button>
+        </div>
+    </div>
+    <script type="module" src="main.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "./utils/storage.js": "./utils/storage.js",
+                "./utils/date-utils.js": "./utils/date-utils.js",
+                "./utils/grades-history-modal.js": "./utils/grades-history-modal.js",
+                "./utils/backup-utils.js": "./utils/backup-utils.js",
+                "./students/students-dom.js": "./students/students-dom.js",
+                "./students/students-logic.js": "./students/__DELETE_ME__.js",
+                "./students/students-api.js": "./students/students-api.js",
+                "./students/students-utils.js": "./students/students-utils.js",
+                "./grade-activity/grade-activity-dom.js": "./grade-activity/grade-activity-dom.js",
+                "./grade-activity/grade-activity-logic.js": "./grade-activity/grade-activity-logic.js",
+                "./attendance/attendance-dom.js": "./attendance/attendance-dom.js",
+                "./attendance/attendance-logic.js": "./attendance/attendance-logic.js",
+                "xlsx": "https://unpkg.com/xlsx/xlsx.mjs"
+            }
+        }
+    </script>
+    <footer class="app-footer">
+        Cuaderno del Profesor Sergio &reg; - Sergio D. H. 2025
+    </footer>
+</body>
+</html>
