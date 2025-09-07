@@ -1,0 +1,606 @@
+/* Inherits general styles from groups.css */
+
+.container {
+    max-width: 800px; /* Adjust container width as needed */
+}
+
+h2 {
+    color: #007bff;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-bottom: 2px solid #e0f2f7;
+    padding-bottom: 10px;
+}
+
+/* NEW: Styles for section header with a button */
+.section-header-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Space between header and list */
+}
+
+.section-header-with-button h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.section-header-with-button .create-button {
+    margin-top: 0; /* Override default margin */
+    flex-shrink: 0; /* Prevent button from shrinking on small screens */
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group select,
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group textarea {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    margin-bottom: 15px; /* Add some spacing */
+}
+
+.form-group select:focus,
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="date"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+#groupInfoDisplay {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+#activitiesList {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#activitiesList li {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px; /* More rounded corners */
+    padding: 15px 20px; /* Adjusted padding */
+    margin-bottom: 15px; /* More space between items */
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: 1fr auto; /* Content on left, controls on right */
+    grid-template-areas:
+        "main-info controls"
+        "extra-info controls"
+        "grading-info controls";
+    gap: 5px 20px; /* Space between rows and columns */
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+#activitiesList li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.activity-main-info {
+    grid-area: main-info;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.activity-type-label {
+    font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    font-size: 0.78em;
+    color: #0b66d0; /* blue text */
+    background: #ffffff; /* white background */
+    border: 1px solid #0b66d0; /* blue border */
+    border-radius: 12px;
+    padding: 3px 8px;
+    margin-left: 10px;
+    align-self: center;
+    display: inline-block;
+    text-transform: none;
+}
+
+.activity-name-and-date {
+    display: flex;
+    flex-direction: column;
+}
+
+.activity-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.2em;
+}
+
+.activity-date {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.activity-extra-info {
+    grid-area: extra-info;
+    font-size: 0.9em;
+    color: #555;
+    padding-left: 5px; /* Align with name */
+}
+
+.activity-extra-info p {
+    margin: 0;
+    font-style: italic;
+}
+
+.activity-grading-info {
+    grid-area: grading-info;
+    font-size: 0.85em;
+    color: #888;
+    padding-left: 5px; /* Align with name */
+}
+
+/* Style for past activities */
+.past-activity .activity-name,
+.past-activity .activity-details span {
+    color: #8B0000; /* Dark red for past activities */
+}
+
+/* Style for today's activities */
+.today-activity .activity-name,
+.today-activity .activity-details span {
+    color: #28a745; /* Green for today's activities */
+}
+
+/* Style for upcoming activities (next 4 days) */
+.upcoming-activity .activity-name,
+.upcoming-activity .activity-details span {
+    color: #ffc107; /* Yellow for upcoming activities */
+}
+
+.activity-controls {
+    grid-area: controls;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 8px; /* Space between control buttons */
+    align-items: stretch; /* Make buttons same width */
+}
+
+.activity-controls button {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    color: white;
+}
+
+.edit-button {
+    background-color: #007bff; /* Blue */
+}
+.edit-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.delete-activity-button { /* Renamed to avoid conflict with student delete */
+    background-color: #dc3545; /* Red */
+}
+.delete-activity-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.duplicate-activity-button { /* New button for duplication */
+    background-color: #17a2b8; /* Cyan/Teal */
+}
+.duplicate-activity-button:hover {
+    background-color: #138496;
+    transform: translateY(-2px);
+}
+
+/* NEW: Activities Controls Container */
+.activities-controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+    padding: 15px;
+    background-color: #f0f8ff; /* Light alice blue background */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e0f2f7;
+}
+
+.activities-controls-container .form-group {
+    margin-bottom: 0;
+    flex: 1 1 200px; /* Flexbox for responsive layout */
+}
+
+.activities-controls-container .form-group label {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.activities-controls-container input[type="search"],
+.activities-controls-container input[type="date"],
+.activities-controls-container select { /* NEW: added select for category filter */
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 0;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+
+.date-inputs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* NEW: Style for the clear date filter button */
+.clear-filter-button {
+    background-color: #dc3545; /* Red, like a delete action */
+    color: white;
+    border: none;
+    border-radius: 6px; /* Slightly rounded */
+    width: 28px; /* Fixed width for icon-like button */
+    height: 28px; /* Fixed height */
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex; /* Center the '✖' */
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent it from shrinking */
+    padding: 0; /* Remove default padding */
+}
+
+.clear-filter-button:hover {
+    background-color: #c82333;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.sort-button {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #007bff;
+    background-color: #ffffff;
+    color: #007bff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sort-button.active,
+.sort-button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* NEW: Mark display and buttons */
+.activity-mark-display {
+    font-size: 1.5em;
+    margin-right: 10px;
+    line-height: 1;
+}
+
+.activity-marks {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.mark-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 1em;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.mark-button:hover {
+    transform: scale(1.1);
+    border-color: #999;
+}
+
+.no-activities-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.create-button {
+    margin-top: 15px; /* Add margin to separate from form fields */
+}
+
+/* NEW: Added styles for custom grading types and rubric items */
+#customGradingTypesSection .hint-text { color:#6c757d; font-size:0.9em; margin-top:6px; }
+#rubricItemsList { list-style:none; padding:0; margin:0; }
+#rubricItemsList input[type="text"]{ margin:0; }
+#rubricItemsList input[type="number"]{ margin:0; }
+.binary-grid, .attendance-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.rubric-items-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+
+/* NEW: Styles for rubric item creation/editing */
+.rubric-item-row {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    align-items: flex-start; /* Align contents to the top of the row */
+    gap: 12px; /* Space between input wrapper and controls */
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background-color: #fcfcfc;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.rubric-inputs-wrapper {
+    flex-grow: 1; /* Allow it to take up most of the space */
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+    gap: 8px; /* Space between title and description */
+    min-width: 180px; /* Ensure a minimum width */
+}
+
+.rubric-inputs-wrapper input[type="text"],
+.rubric-inputs-wrapper textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+    margin-bottom: 0; /* Override default margin */
+}
+
+.rubric-inputs-wrapper textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 40px; /* Minimum height for description */
+    font-size: 0.9em;
+}
+
+.rubric-weight-controls {
+    display: flex;
+    align-items: center; /* Align input and button vertically */
+    gap: 8px; /* Space between weight input and delete button */
+    flex-shrink: 0; /* Prevent from shrinking */
+}
+
+.rubric-weight-controls input[type="number"] {
+    width: 60px; /* Fixed width for weight input */
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+
+.remove-item-rubric {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    height: 38px; /* Match height of other inputs for consistency */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-item-rubric:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+/* NEW: Numeric range grid for custom grading type */
+.numeric-range-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    gap: 8px;
+    align-items: flex-start; /* Align items to the top (input + hint) */
+}
+.numeric-range-grid .numeric-input-wrapper {
+    display: flex;
+    flex-direction: column; /* Stack input and hint vertically */
+    align-items: flex-start; /* Align contents to the start */
+    gap: 2px; /* Small gap between input and hint */
+    flex: 1 1 100px; /* Same flex properties as the input */
+}
+.numeric-range-grid .numeric-input-wrapper input {
+    width: 100%; /* Make input fill its wrapper */
+    margin-bottom: 0; /* Remove default margin for inner inputs */
+}
+.numeric-range-grid .range-hint {
+    font-size: 0.75em; /* Smaller font for hints */
+    color: #6c757d; /* Muted color */
+    margin-left: 4px; /* Slight indent */
+}
+
+/* Options modal basic styles */
+.activity-options-modal {
+    position: fixed;
+    z-index: 1200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.35);
+}
+.activity-options-modal .modal-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    min-width: 260px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+.activity-options-modal .modal-card button {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    margin: 6px 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+.activity-options-modal .modal-card .opt-edit { background:#007bff; color:#fff; }
+.activity-options-modal .modal-card .opt-delete { background:#dc3545; color:#fff; }
+.activity-options-modal .modal-card .opt-duplicate { background:#17a2b8; color:#fff; }
+.activity-options-modal .modal-card .opt-cancel { background:#f1f1f1; color:#333; }
+
+/* Responsive: hide individual action buttons and show single Options button on small screens */
+@media (max-width: 768px) {
+    .activity-controls .activity-actions button { display: none; } /* hide Edit/Delete/Duplicate */
+    .activity-controls .options-button { display: inline-block; background:#007bff; color:#fff; border:none; padding:8px; border-radius:6px; cursor:pointer; }
+    /* Hide the inline mark icons on small screens; they are moved into the options modal */
+    .activity-controls .activity-marks { display: none; }
+}
+/* On larger screens keep options-button hidden */
+@media (min-width: 769px) {
+    .activity-controls .options-button { display: none; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    .form-group select,
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group input[type="date"],
+    .form-group textarea {
+        width: 100%;
+    }
+
+    /* Adjust date-inputs to allow clear button to be at the end */
+    .date-inputs {
+        flex-wrap: wrap; /* Allow items to wrap */
+        justify-content: space-between; /* Distribute items */
+    }
+
+    .date-inputs input {
+        flex-grow: 1; /* Allow date inputs to take available space */
+        min-width: 120px; /* Ensure they don't get too small */
+    }
+
+    .date-inputs span {
+        flex-basis: 100%; /* Force '-' to its own line if wrapped */
+        text-align: center;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .clear-filter-button {
+        width: 100%; /* Full width on small screens if wrapped */
+        height: 38px; /* Maintain height */
+        margin-top: 10px; /* Add space if wrapped */
+    }
+
+    #activitiesList li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .activity-details {
+        margin-bottom: 10px;
+        margin-right: 0;
+        width: 100%;
+    }
+    .activity-controls {
+        width: 100%;
+        justify-content: flex-end; /* Align controls to end on small screens */
+        margin-top: 10px;
+    }
+
+    .numeric-range-grid {
+        flex-direction: column; /* Stack inputs vertically on small screens */
+        align-items: stretch;
+    }
+    .numeric-range-grid .numeric-input-wrapper {
+        width: 100%; /* Make wrapper take full width */
+    }
+    .numeric-range-grid input[type="number"] {
+        width: 100%;
+        max-width: none;
+    }
+
+    .rubric-items-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .rubric-items-header .create-button {
+        width: 100%;
+    }
+    .rubric-item-row {
+        flex-direction: column; /* Stack inputs and controls vertically */
+        align-items: stretch; /* Stretch to fill width */
+    }
+    .rubric-inputs-wrapper {
+        min-width: unset; /* Remove min-width on small screens */
+        width: 100%;
+    }
+    .rubric-weight-controls {
+        width: 100%;
+        justify-content: space-between; /* Distribute weight input and button */
+    }
+    .rubric-weight-controls input[type="number"] {
+        flex-grow: 1; /* Allow weight input to grow */
+    }
+    .remove-item-rubric {
+        flex-grow: 1; /* Allow remove button to grow */
+        max-width: unset;
+    }
+}

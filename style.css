@@ -1,0 +1,338 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e0f2f7; /* Light blue background */
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Changed to column to allow footer at the bottom */
+    justify-content: space-between; /* Pushes content up and footer down */
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+    padding: 20px; /* Add base padding */
+    padding-top: 70px; /* Space for global fixed buttons */
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px 60px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 20px; /* Add margin below container to separate from footer */
+}
+
+.header-with-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Changed to space-between for left/right buttons */
+    gap: 15px; /* Space between title and buttons */
+    margin-bottom: 40px; /* Adjust margin down from h1 */
+}
+
+h1 {
+    color: #007bff; /* Blue heading */
+    margin-bottom: 0; /* Reset default h1 margin */
+    font-size: 2.5em;
+    font-weight: 600;
+    flex-grow: 1; /* Allow title to take available space */
+}
+
+.action-button {
+    background-color: #17a2b8; /* Cyan/Teal, distinctive color */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Round button */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.action-button:hover {
+    background-color: #138496; /* Darker cyan on hover */
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.main-button {
+    background-color: #007bff; /* Primary blue for buttons */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 30px 20px;
+    font-size: 1.4em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 150px; /* Ensure buttons are tall */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-button:hover:not(:disabled) {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-5px);
+}
+
+.main-button:disabled {
+    background-color: #cccccc; /* Grey out disabled buttons */
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.button-icon {
+    font-size: 3.5em; /* Large icon size */
+    margin-bottom: 10px;
+    line-height: 1; /* Adjust line height to prevent extra space */
+}
+
+.button-text {
+    line-height: 1.2; /* Adjust line height for text */
+}
+
+/* NEW: Global Actions Container for index.html */
+.global-actions-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    z-index: 1000;
+}
+
+/* NEW: Global Load Button */
+.global-load-button {
+    background-color: #007bff; /* Blue, for a 'load' action */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.global-load-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Updated Global Save Button for index.html */
+.global-save-button {
+    position: static; /* No longer fixed, positioned by parent container */
+    background-color: #28a745; /* Green, like a save action */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 1000;
+}
+
+.global-save-button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* NEW: Clear data container and button */
+.clear-data-container {
+    margin-top: 50px; /* Space above the button */
+    text-align: center;
+}
+
+.clear-data-container .delete-button {
+    background-color: #dc3545; /* Red, indicating a destructive action */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.clear-data-container .delete-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.checkbox-list li {
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start; /* Align items to the start (top) if multiple lines */
+    transition: background-color 0.2s ease;
+    cursor: grab;
+    gap: 8px; /* Add gap for spacing between checkbox/label and button */
+}
+
+/* Ensure the button is styled consistently */
+.checkbox-list li .action-button-small.open-activity-button {
+    margin-left: auto; /* Push the button to the right */
+    flex-shrink: 0; /* Prevent button from shrinking */
+    padding: 6px 10px; /* Adjust padding for better fit */
+    font-size: 0.8em; /* Smaller font size */
+    min-width: 0; /* Allow width to be determined by content + padding */
+    height: auto; /* Allow height to adjust */
+    align-self: center; /* Vertically center the button */
+}
+
+/* NEW: Footer styles */
+.app-footer {
+    margin-top: auto; /* Pushes the footer to the bottom */
+    padding: 15px;
+    text-align: center;
+    font-size: 0.85em;
+    color: #6c757d; /* Muted color for subtlety */
+    width: 100%;
+    max-width: 900px; /* Match container max-width */
+}
+
+/* NEW: Settings gear fixed at bottom-left */
+.settings-access-container {
+    position: fixed;
+    bottom: 18px;
+    left: 18px;
+    z-index: 1100;
+}
+/* NEW: Logout button fixed at bottom-right */
+.logout-access-container {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    z-index: 1100;
+}
+.settings-gear {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.settings-gear:hover { transform: scale(1.04); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding-top: 60px; /* Adjust for smaller buttons */
+        overflow-x: hidden; /* Prevent horizontal scrollbar on small screens */
+    }
+
+    .container {
+        padding: 20px;
+        margin: 10px;
+        width: calc(100% - 40px); /* Ensure container doesn't overflow viewport */
+        box-sizing: border-box;
+    }
+
+    .header-with-button {
+        flex-direction: column; /* Stack buttons and title */
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-bottom: 0;
+        text-align: center; /* Center title when stacked */
+    }
+
+    .action-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.6em;
+    }
+
+    .button-grid {
+        grid-template-columns: 1fr; /* Stack buttons on small screens */
+        gap: 20px;
+    }
+
+    .main-button {
+        padding: 25px 15px;
+        font-size: 1.2em;
+        min-height: 120px;
+    }
+
+    .button-icon {
+        font-size: 3em;
+    }
+
+    /* Responsive for global save and load buttons */
+    .global-actions-container {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+    .global-save-button, .global-load-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.6em;
+    }
+
+    .clear-data-container {
+        margin-top: 40px;
+    }
+    .clear-data-container .delete-button {
+        width: 100%;
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+
+    .checkbox-list li {
+        flex-wrap: wrap; /* Allow items to wrap on small screens */
+        justify-content: space-between; /* Distribute items */
+    }
+    .checkbox-list li .action-button-small.open-activity-button {
+        width: 100%; /* Full width on small screens */
+        margin-left: 0; /* Remove left margin */
+        margin-top: 8px; /* Add some top margin */
+    }
+    .checkbox-list label {
+        flex-basis: 100%; /* Make label take full width */
+    }
+}

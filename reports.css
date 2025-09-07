@@ -1,0 +1,532 @@
+/* Inherits general styles from groups.css */
+
+.container {
+    max-width: 1100px;
+    padding: 30px 40px;
+}
+
+h1 {
+    color: #007bff; /* Blue heading */
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 600;
+    border-bottom: 2px solid #e0f2f7;
+    padding-bottom: 10px;
+}
+
+.back-button {
+    margin-bottom: 25px; /* Add some space below the back button */
+}
+
+.section {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.section h2 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+    border-bottom: 1px solid #e0f2f7;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.section p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* NEW: Styles for form elements in reports */
+.report-filters .form-group {
+    margin-bottom: 20px;
+}
+
+.report-filters label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.report-filters select[multiple],
+.report-filters input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-filters select[multiple]:focus,
+.report-filters input[type="date"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.report-filters select[multiple] option {
+    padding: 8px 10px;
+}
+
+.report-filters select[multiple]:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.report-filters .create-button {
+    width: auto;
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    display: block; /* Make it a block element to take full width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.report-filters .create-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.help-text {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 5px;
+    display: block;
+}
+
+.action-button {
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+/* NEW: Styles for select with side buttons */
+.select-with-controls {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.select-with-controls select {
+    flex-grow: 1;
+}
+
+.button-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* NEW: Simpler, smaller, homogeneous buttons */
+.action-button-small {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button-small:hover {
+    background-color: #5a6268;
+}
+
+/* NEW: Styles for checkbox lists */
+.checkbox-list {
+    list-style: none;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.checkbox-list li {
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start; /* Align items to the start (top) if multiple lines */
+    transition: background-color 0.2s ease;
+    cursor: grab;
+}
+
+.checkbox-list li.dragging {
+    opacity: 0.6;
+}
+
+.checkbox-list li.drag-over {
+    outline: 2px dashed #007bff;
+}
+
+.checkbox-list li:hover {
+    background-color: #f0f8ff; /* Alice blue on hover */
+}
+
+.checkbox-list li.disabled {
+    color: #6c757d;
+    font-style: italic;
+    cursor: default;
+}
+
+.checkbox-list li.disabled:hover {
+    background-color: transparent;
+}
+
+/* NEW: Custom tick checkbox style */
+.checkbox-list input[type="checkbox"] {
+    /* Hide the default checkbox */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none; /* Make sure it doesn't interfere with label clicks */
+}
+
+.checkbox-list label {
+    display: flex;
+    align-items: flex-start; /* Align checkbox with the top of the text */
+    cursor: pointer;
+    position: relative;
+    padding-left: 30px; /* Make space for the custom checkbox */
+    flex-grow: 1; /* Allow label to take space */
+}
+
+.checkbox-list label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%; /* Center vertically if text is one line, or align with first line */
+    transform: translateY(-50%);
+    width: 20px; /* Size of custom checkbox */
+    height: 20px;
+    border: 2px solid #007bff; /* Blue border for unchecked state */
+    border-radius: 4px; /* Slightly rounded corners */
+    background-color: #fff;
+    transition: background-color 0.2s, border-color 0.2s;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.checkbox-list input[type="checkbox"]:checked + label::before {
+    background-color: #007bff; /* Blue background when checked */
+    border-color: #007bff;
+}
+
+.checkbox-list input[type="checkbox"]:checked + label::after {
+    content: '';
+    position: absolute;
+    left: 4px; /* Position the tick inside the box */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px; /* Size of the tick image */
+    height: 12px;
+    background-image: url('tick_icon.png'); /* The new tick icon */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Ensure disabled checkboxes are visually distinct */
+.checkbox-list li.disabled label {
+    cursor: not-allowed;
+    color: #6c757d;
+}
+
+.checkbox-list li.disabled label::before {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.checkbox-list li.disabled input[type="checkbox"]:checked + label::before {
+    background-color: #9abed6; /* A slightly greyed-out blue for checked disabled */
+    border-color: #9abed6;
+}
+
+.checkbox-list li.disabled input[type="checkbox"]:checked + label::after {
+    opacity: 0.6; /* Dim the tick icon */
+}
+
+.item-details-content { /* NEW: Container for all text within the label */
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.item-name {
+    font-weight: 500;
+    color: #333;
+    overflow: hidden; /* Hide overflowing text */
+    white-space: nowrap; /* Keep text on a single line */
+    text-overflow: ellipsis; /* Add ellipsis for truncated text */
+}
+
+.item-subtext {
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+/* NEW: Styles for activity specific info in the reports list */
+.item-description {
+    font-style: italic;
+    font-size: 0.8em;
+    color: #555;
+    word-break: break-word; /* Allow long descriptions to break */
+}
+
+/* NEW: Color styles for activity names based on date, copied from grades.css */
+.past-activity .item-name {
+    color: #8B0000; /* Dark red for past activities */
+}
+
+.today-activity .item-name {
+    color: #28a745; /* Green for today's activities */
+}
+
+.upcoming-activity .item-name {
+    color: #ffc107; /* Yellow for upcoming activities (next 4 days) */
+}
+
+.selection-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+/* NEW: Style for activity mark icon */
+.activity-mark-icon {
+    width: 1.2em; /* Small size */
+    height: 1.2em;
+    margin-right: 8px; /* Space between icon and text */
+    flex-shrink: 0; /* Prevent it from shrinking */
+    vertical-align: middle; /* Align with text */
+    display: inline-block; /* Ensure it respects margin/sizing */
+    margin-top: 2px; /* Adjust vertical alignment visually */
+}
+
+/* NEW: Styles for student sort dropdown */
+.report-filters .form-group.sort-students-group {
+    margin-top: 15px; /* Add some spacing above the sort dropdown */
+    margin-bottom: 10px; /* Space before the actual student list */
+}
+
+.report-filters .form-group.sort-students-group select {
+    width: 100%;
+    padding: 8px; /* Match other select inputs for consistency */
+    margin-bottom: 0;
+    font-size: 0.95em;
+}
+
+.report-filters .form-group.sort-activities-group select {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.95em;
+}
+
+#txtReportPreview {
+    width: 100%;
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.9em;
+    line-height: 1.5;
+    background-color: #f8f9fa;
+    margin-top: 10px; /* Add some space above the preview box */
+}
+
+/* NEW: Saved Report Configurations Section */
+.saved-reports-section h3 {
+    color: #007bff; /* Consistent subheading color */
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+#savedConfigurationsList.checkbox-list {
+    max-height: 200px; /* Limit height for saved configurations list */
+}
+
+.saved-config-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+}
+
+.saved-config-item .config-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.saved-config-item .config-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.saved-config-item .config-date {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 3px;
+}
+
+.saved-config-item .config-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 15px;
+}
+
+.saved-config-item .action-button-small.load-config-button {
+    background-color: #28a745; /* Green for load */
+}
+
+.saved-config-item .action-button-small.load-config-button:hover {
+    background-color: #218838;
+}
+
+.saved-config-item .action-button-small.delete-config-button {
+    background-color: #dc3545; /* Red for delete */
+}
+
+.saved-config-item .action-button-small.delete-config-button:hover {
+    background-color: #c82333;
+}
+
+.no-configurations-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* Ensure buttons in saved-config-item match other small action buttons */
+.saved-config-item .action-button-small {
+    padding: 6px 10px;
+    font-size: 0.9em;
+    min-width: 0;
+    height: auto;
+    align-self: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .section h2 {
+        font-size: 1.4em;
+    }
+
+    .report-filters input[type="date"],
+    .report-filters select[multiple],
+    .report-filters .form-group.sort-students-group select, /* NEW: include student sort select */
+    .report-filters .form-group.sort-activities-group select { /* NEW: include activity sort select */
+        width: 100%;
+    }
+
+    .report-filters .create-button {
+        width: 100%;
+    }
+
+    .select-with-controls {
+        flex-direction: column;
+    }
+
+    .button-column {
+        flex-direction: row;
+        width: 100%;
+    }
+    .button-column .action-button-small {
+        flex-grow: 1;
+    }
+
+    .checkbox-list li {
+        flex-wrap: wrap; /* Allow items to wrap on small screens */
+        justify-content: space-between; /* Distribute items */
+    }
+    .checkbox-list li .action-button-small.open-activity-button {
+        width: 100%; /* Full width on small screens */
+        margin-left: 0; /* Remove left margin */
+        margin-top: 8px; /* Add some top margin */
+    }
+    .checkbox-list label {
+        flex-basis: 100%; /* Make label take full width */
+    }
+
+    /* Responsive for saved reports list */
+    .saved-config-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-right: 15px;
+    }
+    .saved-config-item .config-actions {
+        width: 100%;
+        justify-content: flex-end;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .saved-config-item .action-button-small {
+        flex-grow: 1;
+    }
+}
+
+.quick-links-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.reset-report-btn {
+    float: right;
+    background: #e9ecef;
+    color: #333;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.reset-report-btn:hover {
+    background: #dfe3e6;
+}

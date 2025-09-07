@@ -1,0 +1,1361 @@
+/* Inherits general styles from groups.css */
+
+.container {
+    max-width: 900px; /* Adjust container width as needed for agenda */
+    padding: 30px 40px;
+}
+
+h1 {
+    color: #17a2b8; /* Cyan heading, consistent with the agenda button on index */
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 600;
+    border-bottom: 2px solid #e0f2f7;
+    padding-bottom: 10px;
+}
+
+.back-button {
+    margin-bottom: 25px;
+}
+
+.section {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.section h2 {
+    color: #17a2b8; /* Cyan subheadings */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+    border-bottom: 1px solid #e0f2f7;
+    padding-bottom: 10px;
+}
+
+.section p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group textarea {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="time"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #17a2b8; /* Cyan focus color */
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+}
+
+.create-button {
+    background-color: #17a2b8; /* Cyan button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+}
+
+.create-button:hover {
+    background-color: #138496; /* Darker cyan on hover */
+    transform: translateY(-2px);
+}
+
+.agenda-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.agenda-list li {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+    position: relative; /* For delete button positioning */
+}
+
+/* NEW: Styles for notes with custom colors */
+.personal-notes-board .agenda-list li.colored {
+    border-left-color: var(--note-color); /* The "bar" */
+    background-color: var(--note-color);  /* The "window background" - direct pastel color */
+    /* Adjust text color for readability if background is too light/dark */
+    color: var(--text-color, #333);
+}
+
+/* NEW: Drag and drop for notes */
+.personal-notes-board .agenda-list li.draggable {
+    cursor: grab;
+}
+
+.personal-notes-board .agenda-list li.dragging {
+    opacity: 0.4;
+    border: 2px dashed #007bff !important;
+    background-color: #e9f5ff !important;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.personal-notes-board .agenda-list li.drag-over-top {
+    border-top: 2px solid #007bff;
+    margin-top: -2px; /* Compensate for border to keep spacing consistent */
+}
+
+.personal-notes-board .agenda-list li.drag-over-bottom {
+    border-bottom: 2px solid #007bff;
+    margin-bottom: -2px;
+}
+
+/* NEW: Color palette for schedule entries (copied from groups.css) */
+.color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.color-option {
+    display: none; /* Hide the actual radio button */
+}
+
+.color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent; /* Default border */
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-option:checked + .color-swatch {
+    border-color: #007bff; /* Highlight selected swatch */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4); /* Glow effect for selection */
+    transform: scale(1.05);
+}
+
+/* NEW: Calendar Styles */
+.calendar-section {
+    margin-bottom: 40px;
+}
+
+/* NEW: Calendar Filters Container */
+.calendar-filters-container {
+    display: grid; /* Use grid for more control */
+    grid-template-columns: 1fr; /* Single column by default */
+    gap: 15px; /* Space between rows */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #e6f7ff; /* Light blue background for filters */
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Two columns for larger screens */
+@media (min-width: 768px) {
+    .calendar-filters-container {
+        grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+        gap: 20px; /* More space between columns */
+    }
+}
+
+.calendar-filters-container .filter-group-row {
+    display: flex; /* Flex container for elements within a row */
+    flex-wrap: wrap; /* Allow items to wrap */
+    gap: 10px; /* Space between elements in a row */
+    align-items: flex-end; /* Align inputs to the bottom */
+}
+
+.calendar-filters-container .form-group {
+    flex: 1 1 150px; /* Allow form groups to grow and shrink, min 150px */
+    margin-bottom: 0; /* Remove default form-group margin */
+}
+
+.calendar-filters-container label {
+    margin-bottom: 5px; /* Smaller margin for labels */
+    font-weight: 500;
+}
+
+.calendar-filters-container select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    height: 38px; /* Standardize height */
+}
+
+.calendar-filters-container select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Styles for the new checkbox-filters-group */
+.checkbox-filters-group {
+    display: flex;
+    flex-direction: column; /* Stack checkboxes vertically */
+    gap: 5px; /* Smaller gap for checkboxes */
+    flex: 1 1 150px; /* Allow to grow like other form groups */
+    justify-content: flex-end; /* Align checkboxes to the bottom */
+}
+.checkbox-filters-group .form-group {
+    flex: none; /* Remove flex from inner form-groups */
+    margin-bottom: 0;
+}
+
+.calendar-navigation {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px; /* Space between items */
+    margin-bottom: 20px;
+    background-color: #e0f2f7;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+/* NEW: Consistent navigation button style with daily_log.css */
+.calendar-nav-button,
+.calendar-nav-input {
+    min-width: 40px; /* Adjust as needed for smaller buttons */
+    height: 38px; /* Consistent height for all nav elements */
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.calendar-nav-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0 10px; /* Adjusted padding */
+}
+
+.calendar-nav-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+}
+
+.calendar-nav-input {
+    background-color: #ffffff;
+    padding: 0 8px; /* Adjusted padding */
+    color: #333;
+    flex-grow: 1; /* Allow date input to take more space */
+    max-width: 150px; /* Limit max width of date picker */
+}
+
+.calendar-nav-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.calendar-week-display {
+    color: #333;
+    font-size: 1.2em; /* Slightly smaller to fit */
+    margin: 0;
+    flex-grow: 1; /* Allow display to take available space */
+    text-align: center;
+    order: 3; /* Position after buttons/input by default */
+    min-width: 200px; /* Ensure it has enough space to display week range */
+}
+
+.calendar-grid {
+    display: grid;
+    gap: 8px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures borders look clean */
+}
+
+.calendar-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid #e9ecef;
+}
+
+.calendar-header:last-child {
+    border-right: none;
+}
+
+.calendar-day {
+    background-color: #ffffff;
+    border-right: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    padding: 10px;
+    min-height: 150px; /* Ensure days have enough height */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-sizing: border-box; /* NEW: Include padding/border in width calculation */
+    overflow: hidden; /* NEW: Hide overflowing content within the day cell */
+}
+
+.calendar-day.weekend {
+    background-color: #C0C0C0; /* Silver background for Saturdays/Sundays */
+}
+
+.calendar-day:last-child {
+    border-right: none;
+}
+
+.calendar-day-date {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.calendar-day.current-day {
+    background-color: #fff9e6; /* Light yellow for current day */
+    border: 2px solid #ffc107; /* Orange border for current day */
+}
+
+.event-item {
+    background-color: #e9f5ff; /* Light blue for events */
+    border-left: 4px solid #007bff; /* Blue stripe */
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden; /* NEW: Hide overflowing content within the event item */
+}
+
+.event-item:hover {
+    background-color: #d1ecf1; /* Slightly darker on hover */
+    transform: translateY(-1px);
+}
+
+.event-item.task {
+    background-color: #ffffff; /* White background for pending tasks */
+    border: 2px solid #007bff; /* Blue frame */
+    border-left-width: 6px; /* preserve a stronger left accent if desired */
+    border-left-color: #007bff;
+    color: #000; /* Ensure text is readable on white */
+    position: relative; /* For pencil icon */
+}
+
+.event-item.meeting {
+    background-color: #fff3cd; /* Light yellow background */
+    border: 2px solid #ffc107; /* Yellow frame */
+    border-left-width: 6px; /* Thicker left border */
+    border-left-color: #ffc107; /* Yellow left border */
+    color: #000; /* Black text for contrast */
+}
+
+.event-item.student-activity {
+    border-left-color: var(--group-color, #dc3545); /* Use group's color when available */
+    background-color: var(--group-bg, #f8d7da); /* Fallback pastel background if no group color is set */
+}
+
+/* NEW: Better contrast for student activity items with very dark group colors */
+.event-item.student-activity.dark-bg {
+    /* fallback text color if JS doesn't set variables */
+    color: #fff;
+}
+.event-item.student-activity.dark-bg strong {
+    color: rgba(255,255,255,0.95);
+}
+.event-item.student-activity.dark-bg .activity-title {
+    color: var(--activity-title-color, #ffffff);
+    font-weight: 600;
+}
+.event-item.student-activity.dark-bg .activity-sub {
+    color: var(--activity-subject-color, rgba(255,255,255,0.9));
+}
+.event-item.student-activity.dark-bg .activity-group-text {
+    color: var(--activity-group-color, rgba(255,255,255,0.8));
+}
+
+.event-item span {
+    display: block;
+    color: #333;
+}
+.event-item .event-time {
+    font-weight: bold;
+    color: #0056b3;
+}
+
+/* NEW: Truncate event item titles to two lines if too long */
+.event-item.student-activity .activity-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal; /* Allow text to wrap normally before truncation */
+}
+
+/* NEW: Explicit two-line clamp for meeting and task titles (match activities) */
+.event-item.meeting .meeting-title,
+.event-item.task .task-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.event-item.meeting > span:first-of-type,
+.event-item.task > span:first-of-type {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+/* NEW: Highlight indicator icon in calendar */
+.highlight-indicator {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.9em;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%; /* This might need adjustment if the image itself has a strong shape */
+    width: 1.2em;
+    height: 1.2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    z-index: 2;
+    cursor: help;
+}
+/* Style for the image inside the highlight indicator */
+.highlight-indicator img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensure the image fits within the circular container */
+}
+
+/* NEW: Task Description Indicator in Calendar */
+.task-description-indicator,
+.meeting-description-indicator { /* NEW: For meetings too */
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    font-size: 0.8em;
+    color: #8A2BE2; /* Purple color */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    padding: 1px 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: help;
+    z-index: 2;
+}
+.task-description-indicator img,
+.meeting-description-indicator img { /* NEW: For meetings too */
+    width: 0.9em;
+    height: 0.9em;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
+/* NEW: Highlighted agenda items (red halo) */
+.event-item.highlighted-halo {
+    box-shadow: 0 0 8px 3px rgba(255, 82, 82, 0.5); /* Softer red halo effect */
+    border-color: rgba(220, 53, 69, 0.7) !important; /* Ensure border is red for better visibility */
+    transform: scale(1.02); /* Slightly grow on highlight */
+}
+
+/* NEW: Notes Board Styles */
+.personal-notes-board .agenda-list li {
+    padding-right: 40px; /* Make space for delete button */
+    cursor: pointer; /* Indicate it's clickable for editing */
+}
+
+.delete-note-button, .delete-task-button, .delete-meeting-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.delete-note-button:hover, .delete-task-button:hover, .delete-meeting-button:hover {
+    background-color: #c82333;
+}
+
+.note-item-content,
+.task-item-content,
+.meeting-item-content { /* NEW: For meetings too */
+    flex-grow: 1;
+    display: flex;
+    align-items: center; /* Make it a flex container for icon + text */
+    flex-wrap: wrap; /* Allow content to wrap */
+    gap: 5px; /* Space between spans */
+    align-items: center; /* Align items vertically to center the icon */
+    padding-right: 40px; /* Space for remove button */
+}
+
+.task-item-checkbox {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: #28a745;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.note-text,
+.task-text,
+.meeting-text { /* NEW: For meetings too */
+    flex-grow: 1;
+    cursor: pointer; /* Indicate entire text is clickable for editing */
+    text-decoration: underline; /* Visual cue for clickability */
+    margin-right: 5px; /* Space for potential description icon */
+}
+
+.note-text.completed,
+.task-text.completed {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* NEW: Note info indicator in list */
+.note-list-info-indicator {
+    font-size: 0.9em;
+    color: #8A2BE2; /* Purple color for eye icon */
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    cursor: help;
+    flex-shrink: 0;
+}
+.note-list-info-indicator img {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+/* NEW: Task description indicator in list */
+.task-list-description-indicator,
+.meeting-list-description-indicator { /* NEW: For meetings too */
+    font-size: 0.9em;
+    color: #8A2BE2;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    cursor: help;
+    flex-shrink: 0;
+}
+.task-list-description-indicator img,
+.meeting-list-description-indicator img { /* NEW: For meetings too */
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+/* NEW: Modal Styles (reusing from grade_activity.css / students.css) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Enhanced modal header, layout and action styling for task/meeting/note edit windows */
+.modal-content {
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    padding: 0;
+    border: 1px solid #888;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    text-align: center;
+    overflow: hidden; /* match daily log modal behavior */
+    max-height: 75vh; /* limit height so modal is less tall */
+    overflow: auto;   /* allow internal scrolling when content is large */
+    overflow-x: hidden; /* prevent horizontal scrollbar */
+    width: min(640px, 98%);
+    box-sizing: border-box;
+    max-width: 640px;
+}
+
+/* Header inside modal with subtle accent and icon */
+.modal-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 18px 22px;
+    background-color: #f1fdf9; /* match daily log modal accent (light green) */
+    border-bottom: 11px solid #e2fef5;
+}
+
+.modal-header-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    padding: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.modal-header-text h2 {
+    margin: 0;
+    font-size: 1.25em;
+    color: #20c997; /* green heading like daily notes modal */
+}
+
+.modal-sub {
+    margin: 4px 0 0 0;
+    font-size: 0.9em;
+    color: #556;
+}
+
+/* Date/time row shown in modal header (compact, inline) */
+.modal-header .date-time-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.modal-header .date-time-row input[type="date"],
+.modal-header .date-time-row input[type="time"] {
+    height: 36px;
+    padding: 6px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.95em;
+}
+
+/* Two-column body grid for clearer form layout */
+.modal-body-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column so description/textareas span full width */
+    gap: 18px;
+    padding: 18px 22px;
+    align-items: start;
+}
+
+.modal-column { /* inner wrapper for each column */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Small informative chips and preview areas */
+.modal-meta-chip {
+    display: inline-block;
+    background-color: #eef9ff;
+    color: #006f9a;
+    border: 1px solid #d9f0fb;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.85em;
+    margin-bottom: 8px;
+}
+
+.modal-preview {
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Buttons in modal actions: add icons and consistent spacing */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 16px 18px 22px 18px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
+}
+
+.modal-actions .create-button,
+.modal-actions .delete-button,
+.modal-actions .back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px; /* use comfortable padding instead of fixed width */
+    border-radius: 8px;
+    font-weight: 600;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.modal-actions .create-button .btn-icon { width: 18px; height: 18px; filter: none; }
+.modal-actions .delete-button .btn-icon { width: 18px; height: 18px; filter: none; }
+.modal-actions .back-button .btn-icon { width: 18px; height: 18px; filter: none; }
+
+/* Improve close button appearance */
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+/* NEW: Highlighted Items Section */
+.highlighted-items-section {
+    margin-bottom: 40px;
+}
+
+.highlighted-items-section h2 {
+    color: #dc3545; /* Reddish for attention */
+    border-bottom: 1px solid #f8d7da; /* Lighter red border */
+}
+
+.highlighted-list-item {
+    background-color: #ffe0b2; /* Light orange background */
+    border: 1px solid #ff9800; /* Orange border */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    font-size: 0.95em;
+    position: relative; /* For delete button */
+}
+
+.highlighted-item-content {
+    flex-grow: 1;
+    display: flex; /* Make it a flex container for icon + text */
+    flex-wrap: wrap; /* Allow content to wrap */
+    gap: 5px; /* Space between spans */
+    align-items: center; /* Align items vertically to center the icon */
+    padding-right: 40px; /* Space for remove button */
+}
+
+/* NEW: Style for the inline warning icon in the highlighted list */
+.highlighted-item-inline-icon {
+    width: 1.2em; /* Smaller, consistent with calendar icon */
+    height: 1.2em;
+    vertical-align: middle; /* Ensure it aligns nicely with text */
+    margin-right: 5px; /* Space between icon and text */
+    flex-shrink: 0; /* Prevent shrinking if content wraps */
+}
+
+.highlighted-item-type {
+    font-weight: bold;
+    color: #a04000; /* Darker orange for type */
+}
+
+.highlighted-item-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.highlighted-item-date {
+    font-weight: bold;
+    color: #007bff; /* Blue for the date */
+}
+
+.highlighted-item-group,
+.highlighted-item-date {
+    font-size: 0.85em;
+    color: #555;
+}
+
+.highlighted-item-description {
+    font-style: italic;
+    color: #6c757d;
+    font-size: 0.8em;
+    cursor: help;
+}
+
+.remove-highlight-button {
+    background-color: #dc3545; /* Red */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.remove-highlight-button:hover {
+    background-color: #c82333;
+}
+
+.no-highlighted-items-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* NEW: Blinking red/black animation for day name when there are highlighted dates */
+@keyframes blinkRedBlack {
+    0%   { color: #000; }
+    50%  { color: #f00; }
+    100% { color: #000; }
+}
+.calendar-day-name.blink-red-black {
+    animation: blinkRedBlack 1s steps(2, end) infinite;
+    font-weight: 700;
+}
+
+/* NEW: Temporary focus effect for calendar items */
+.event-item.calendar-item-focused {
+    animation: highlight-focus 1.5s ease-out forwards;
+}
+
+@keyframes highlight-focus {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 15px 5px rgba(0, 123, 255, 0.7);
+        transform: scale(1.05);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+        transform: scale(1);
+    }
+}
+
+/* NEW: Color picker styles */
+.color-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.color-picker {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+}
+
+/* NEW: Hide Weekend Checkbox */
+.hide-weekend-checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0; /* Prevent it from shrinking */
+}
+
+.hide-weekend-checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #007bff; /* Accent color for the checkbox */
+    cursor: pointer;
+}
+
+.hide-weekend-checkbox-group label {
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    margin-bottom: 0; /* Override default label margin */
+}
+
+/* NEW: Planning Mode Checkbox Group - Reuses styles from hide-weekend-checkbox-group */
+.planning-mode-checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0; /* Prevent it from shrinking */
+}
+
+.planning-mode-checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #007bff; /* Accent color for the checkbox */
+    cursor: pointer;
+}
+
+.planning-mode-checkbox-group label {
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    margin-bottom: 0; /* Override default label margin */
+}
+
+/* For the select inside the planning-mode-checkbox-group */
+.planning-days-count-group {
+    margin-left: 8px; /* Space between checkbox label and select */
+    flex-shrink: 0;
+}
+.planning-days-count-group select {
+    width: auto; /* Allow select to shrink to content */
+    padding: 4px 8px; /* Smaller padding */
+    height: 28px; /* Smaller height */
+    font-size: 0.9em;
+}
+
+/* NEW: Styles for the combined calendar title and controls */
+.calendar-title-with-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between title and checkbox group */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    margin-bottom: 15px; /* Space below this header block */
+}
+
+/* Ensure H2 doesn't shrink too much */
+.calendar-title-with-controls h2 {
+    flex-shrink: 0;
+    margin: 0; /* Reset default h2 margins */
+    border-bottom: none; /* Remove border if inherited */
+    padding-bottom: 0; /* Remove padding if inherited */
+    font-size: 1.6em; /* Adjust to fit better with controls */
+}
+
+/* Styles for the group of checkboxes next to the title */
+.header-checkboxes-group {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between the two checkbox groups */
+    flex-wrap: wrap; /* Allow checkboxes to wrap on small screens */
+    margin-left: auto; /* Push to the right, next to the title */
+}
+
+/* Adjustments for form-group within header-checkboxes-group */
+.header-checkboxes-group .form-group {
+    margin-bottom: 0; /* Remove default form-group margin */
+}
+
+/* Collapsible section styles */
+.collapsible-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+.collapsible-toggle {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #007bff;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, transform 0.12s ease;
+}
+.collapsible-toggle:hover { background: rgba(0,123,255,0.06); transform: translateY(-1px); }
+.collapsible-content { display: block; transition: max-height 0.22s ease, opacity 0.18s ease; overflow: hidden; }
+/* Collapsed state */
+.collapsible-content.collapsed { max-height: 0; opacity: 0; padding: 0; margin: 0; pointer-events: none; }
+/* Ensure visible content has normal spacing */
+.collapsible-content:not(.collapsed) { max-height: 2000px; opacity: 1; pointer-events: auto; }
+
+/* NEW: Info button in calendar header */
+.calendar-header .hd-info-button { background:transparent; border:none; margin-left:8px; cursor:pointer; vertical-align:middle; padding:4px; border-radius:4px; }
+/* NEW: Blue circular info icon with white 'i' */
+.calendar-header .hd-info-button .hd-info-icon {
+    display:inline-flex;
+    width:20px;
+    height:20px;
+    align-items:center;
+    justify-content:center;
+    background:#007bff; /* blue */
+    color:#fff;
+    border-radius:50%;
+    font-weight:700;
+    font-size:12px;
+    line-height:1;
+    box-shadow:0 2px 6px rgba(0,123,255,0.24);
+}
+/* Ensure the header button has accessible hit area */
+.calendar-header .hd-info-button { padding:6px; }
+
+/* NEW: Highlighted dates UI styles */
+.highlighted-dates-section .highlighted-date-form .hd-dates-controls { display:flex; gap:8px; align-items:center; }
+.hd-dates-list { list-style:none; padding:8px 0; margin:6px 0 0 0; display:flex; flex-direction:column; gap:6px; }
+.hd-dates-list li { display:flex; justify-content:space-between; align-items:center; padding:6px 8px; border:1px solid #e9ecef; border-radius:6px; background:#fff; }
+#highlightedDatesList li.agenda-list-item { padding:10px; }
+.hd-swatch { width:14px; height:14px; border-radius:3px; display:inline-block; margin-right:8px; }
+
+/* NEW: Scrollbar for saved highlighted dates list when it exceeds 6 items */
+.saved-highlighted-dates-list {
+    max-height: 420px; /* Estimated height for 6 items */
+    overflow-y: auto;
+    padding-right: 8px; /* Space for the scrollbar */
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* NEW: Styles for the icon carousel */
+.icon-carousel {
+    display: flex;
+    flex-wrap: nowrap; /* Keep icons in a single line */
+    gap: 8px;
+    padding: 8px;
+    background-color: #f0f2f5;
+    border-radius: 8px;
+    overflow-x: auto; /* Enable horizontal scrolling if icons overflow */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #007bff #f0f2f5;
+}
+.icon-carousel::-webkit-scrollbar {
+    height: 6px;
+}
+.icon-carousel::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 3px;
+}
+.icon-carousel::-webkit-scrollbar-track {
+    background-color: #f0f2f5;
+}
+
+.icon-carousel-item {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    border-radius: 50%; /* Make items circular */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.icon-carousel-item:hover {
+    transform: scale(1.1);
+    border-color: #90caff; /* Light blue border on hover */
+}
+.icon-carousel-item.selected {
+    border-color: #007bff; /* Strong blue border for selected */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Glow effect */
+    transform: scale(1.05);
+}
+.icon-carousel-item .icon-shape {
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+}
+.icon-carousel-item .icon-star {
+    width: 60%;
+    height: 60%;
+    background-color: gold;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* Highlighted date modal */
+#highlightedDateModal .modal-content { max-width:520px; width:90%; }
+#highlightedDateModal #hdModalDates { color:#007bff; margin-bottom:8px; }
+
+/* Ensure calendar header text remains readable when colored */
+.calendar-header { color: #fff; } /* default for colored headers; overridden when not colored by JS */
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .section h2 {
+        font-size: 1.4em;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="time"],
+    .form-group textarea {
+        width: 100%;
+    }
+
+    .create-button {
+        width: 100%;
+    }
+
+    /* Calendar Responsive */
+    .calendar-navigation {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center; /* Center items when wrapped */
+    }
+    .calendar-nav-button {
+        flex-grow: 1; /* Allow buttons to expand to fill space */
+    }
+    .calendar-nav-input {
+        flex-grow: 1;
+        max-width: none; /* Remove max-width on small screens for better flex-grow behavior */
+        order: 2; /* Put date picker after prev/current week buttons */
+    }
+    .calendar-week-display {
+        font-size: 1.2em;
+        width: 100%;
+        order: -1; /* Move to top of navigation */
+    }
+
+    /* Replace horizontal-scrolling layout with an adaptive grid that fits available width */
+    .calendar-grid {
+        display: grid;
+        grid-auto-flow: row; /* use rows so columns adapt within container */
+        grid-template-columns: repeat(var(--visible-days-count, 7), 1fr); /* fluid columns, number of days controlled by JS via CSS var when needed */
+        gap: 8px;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: visible; /* remove horizontal scrollbar */
+        -webkit-overflow-scrolling: touch; /* smooth on iOS */
+        padding-bottom: 8px; /* room for scrollbar */
+    }
+
+    .calendar-day {
+        min-width: 0; /* allow columns to shrink to fit grid cell */
+        border-right: 1px solid #e9ecef;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        min-height: 100px;
+        box-sizing: border-box;
+    }
+
+    .calendar-day-date {
+        background-color: #e0f2f7;
+        padding: 5px;
+        margin: -10px -10px 10px -10px; /* Fill top of day cell */
+        border-radius: 8px 8px 0 0;
+        font-size: 1em;
+    }
+
+    .calendar-day.current-day {
+        border: 2px solid #ffc107;
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.4);
+    }
+
+    .event-item {
+        white-space: normal; /* Allow text to wrap */
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .task-description-indicator,
+    .meeting-description-indicator { /* NEW: For meetings too */
+        font-size: 0.7em;
+        padding: 1px 2px;
+        bottom: 2px;
+        right: 2px;
+    }
+
+    /* Notes/Tasks/Meetings List Responsive */
+    .agenda-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-right: 15px; /* Adjust padding for delete button */
+    }
+
+    .delete-note-button, .delete-task-button, .delete-meeting-button {
+        top: 10px; /* Position closer to top on small screens */
+        right: 10px;
+        transform: none; /* Remove translateY */
+    }
+
+    .note-item-content,
+    .task-item-content,
+    .meeting-item-content { /* NEW: For meetings too */
+        margin-right: 35px; /* Make space for delete button */
+        margin-bottom: 5px;
+        padding-right: 0; /* Remove extra padding on small screens */
+    }
+    .note-text,
+    .task-text,
+    .meeting-text { /* NEW: For meetings too */
+        overflow: visible;
+        white-space: normal;
+        text-overflow: clip;
+    }
+    .note-list-info-indicator,
+    .task-list-description-indicator,
+    .meeting-list-description-indicator { /* NEW: For meetings too */
+        margin-left: auto; /* Push to right */
+        margin-right: 0;
+        margin-top: 5px; /* Space from text above */
+        padding: 1px 3px;
+    }
+
+    .modal-content {
+        width: 98%;
+        padding: 12px; /* smaller padding for narrow screens */
+        max-width: 98%;
+        overflow-x: hidden;
+    }
+
+    /* Responsive adjustments for highlighted list */
+    .highlighted-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-right: 15px; /* Adjust padding for delete button */
+    }
+
+    .highlighted-item-content {
+        width: calc(100% - 35px); /* Space for button */
+        margin-bottom: 5px;
+        flex-direction: column; /* Stack details vertically */
+        align-items: flex-start;
+        gap: 2px;
+        padding-right: 0;
+    }
+
+    .remove-highlight-button {
+        top: 10px;
+        right: 10px;
+        transform: none;
+    }
+
+    @media (max-width: 720px) {
+        .modal-body-grid {
+            grid-template-columns: 1fr;
+        }
+        .modal-preview-swatch { margin-left: 0; margin-top: 8px; }
+    }
+
+    /* Stack Save / Cancel buttons vertically in Edit Task and Edit Meeting modals on narrow viewports */
+    #editTaskModal .modal-actions,
+    #editMeetingModal .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    #editTaskModal .modal-actions .create-button,
+    #editTaskModal .modal-actions .delete-button,
+    #editMeetingModal .modal-actions .create-button,
+    #editMeetingModal .modal-actions .delete-button {
+        width: 100%;
+        min-width: unset;
+    }
+
+    /* Stack date/time controls in modal headers vertically on narrow screens */
+    .modal-header .date-time-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .modal-header .date-time-row input[type="date"],
+    .modal-header .date-time-row input[type="time"] {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

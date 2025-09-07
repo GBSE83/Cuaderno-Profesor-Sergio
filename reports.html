@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generación de Informes</title>
+    <link rel="stylesheet" href="groups.css"> 
+    <link rel="stylesheet" href="reports.css">
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <button id="globalSaveButton" class="global-save-button">💾</button>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalAgendaButton" class="action-button">📅</button>
+        <button id="globalDailyLogButton" class="action-button">✏️</button>
+    </div>
+    <div class="container">
+        <h1>Generación de Informes</h1>
+
+        <div class="quick-links-bar">
+            <button id="goToGroupsButton" class="action-button-small">Grupos</button>
+            <button id="goToAttendanceButton" class="action-button-small">Asistencia</button>
+            <button id="goToGradesButton" class="action-button-small">Actividades</button>
+        </div>
+
+        <div class="section">
+            <h2>Configurar Informe <button id="resetReportButton" class="reset-report-btn" title="Reiniciar informe">⟲</button></h2>
+            <div class="form-group">
+                <label for="groupSelect">Seleccionar Grupo(s):</label>
+                <div class="select-with-controls">
+                    <select id="groupSelect" multiple size="6" required></select>
+                    <div class="button-column">
+                        <button id="selectAllGroupsBtn" type="button" class="action-button-small">Marcar todos</button>
+                        <button id="deselectAllGroupsBtn" type="button" class="action-button-small">Desmarcar todos</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-filters" style="display: none;">
+                <div class="form-group">
+                    <label for="startDate">Fecha de Inicio:</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">Fecha Fin:</label>
+                    <input type="date" id="endDate" required>
+                </div>
+
+                <div class="form-group" id="activityCategoryFilterSection">
+                    <label>Filtrar por tipo de actividad:</label>
+                    <div class="select-with-controls">
+                        <select id="activityCategoryFilterSelect" multiple size="4"></select>
+                        <div class="button-column">
+                            <button id="selectAllCategoriesBtn" type="button" class="action-button-small">Marcar todas</button>
+                            <button id="deselectAllCategoriesBtn" type="button" class="action-button-small">Desmarcar todas</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Seleccionar Actividades:</label>
+                    <div class="selection-controls">
+                        <button id="selectAllActivitiesBtn" type="button" class="action-button-small">Marcar todas</button>
+                        <button id="deselectAllActivitiesBtn" type="button" class="action-button-small">Desmarcar todas</button>
+                    </div>
+                    <div class="form-group sort-activities-group">
+                        <label for="activitySortSelect">Ordenar actividades por:</label>
+                        <select id="activitySortSelect">
+                            <option value="date_desc">Fecha (futuras primero)</option>
+                            <option value="date_asc">Fecha (pasadas primero)</option>
+                            <option value="created_asc">Creación (antes)</option>
+                            <option value="created_desc">Creación (después)</option>
+                            <option value="manual">Manual (arrastre)</option>
+                        </select>
+                    </div>
+                    <ul id="activitiesList" class="checkbox-list">
+                        <!-- Activities will be loaded here by JavaScript -->
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label>Seleccionar Alumnos:</label>
+                    <div class="selection-controls">
+                        <button id="selectAllStudentsBtn" type="button" class="action-button-small">Marcar todos</button>
+                        <button id="deselectAllStudentsBtn" type="button" class="action-button-small">Desmarcar todos</button>
+                    </div>
+                    <div class="form-group sort-students-group">
+                        <label for="studentSortSelect">Ordenar alumnos por:</label>
+                        <select id="studentSortSelect">
+                            <option value="lastName">Apellidos, Nombre</option>
+                            <option value="firstName">Nombre, Apellidos</option>
+                            <option value="manual">Manual (arrastre)</option>
+                        </select>
+                    </div>
+                    <ul id="studentsList" class="checkbox-list">
+                        <!-- Students will be loaded here by JavaScript -->
+                    </ul>
+                </div>
+                <div style="margin-top:12px; display:flex; align-items:center; gap:12px;">
+                    <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" id="includeAttendanceCheckbox"> Incluir informe de asistencia</label>
+                    <button id="generateReportButton" class="create-button" disabled>Generar Informe Excel (.xlsx)</button>
+                </div>
+            </div>
+            <p id="reportMessage" style="font-style: italic; color: #6c757d; margin-top: 20px;">Selecciona un grupo para empezar.</p>
+        </div>
+
+        <div class="section">
+            <h2>Configuraciones Guardadas</h2>
+            <div class="form-group">
+                <label for="saveConfigName">Nombre para la configuración:</label>
+                <input type="text" id="saveConfigName" placeholder="Ej: Informe Trimestre 1 Matemáticas" maxlength="50">
+            </div>
+            <button id="saveConfigurationButton" class="create-button">Guardar Configuración Actual</button>
+            
+            <h3 style="margin-top:30px; margin-bottom:15px; border-bottom: 1px solid #e0f2f7; padding-bottom:10px;">Configuraciones Almacenadas (máx. 10)</h3>
+            <ul id="savedConfigurationsList" class="checkbox-list">
+                <!-- Saved configurations will be loaded here by JavaScript -->
+                <li class="no-configurations-message">No hay configuraciones guardadas.</li>
+            </ul>
+        </div>
+
+        <div class="section txt-reports-section">
+            <h2>Generar Informes de Texto (.txt)</h2>
+            <p>Descarga o carga informes de la estructura de actividades y alumnos de los grupos seleccionados.</p>
+
+            <div class="form-group">
+                <button id="downloadActivitiesTxtButton" class="create-button" style="margin-right:10px;">Descargar Informe de Actividades (.txt)</button>
+                <button id="downloadStudentsTxtButton" class="create-button">Descargar Informe de Alumnos (.txt)</button>
+            </div>
+
+            <h3 style="margin-top:30px; margin-bottom:15px; border-bottom: 1px solid #e0f2f7; padding-bottom:10px;">Cargar Informe de Texto</h3>
+            <div class="form-group">
+                <label for="uploadTxtFile">Seleccionar archivo de texto (.txt):</label>
+                <input type="file" id="uploadTxtFile" accept=".txt">
+                <button id="previewTxtReportButton" class="create-button" style="margin-top:10px;">Previsualizar Informe</button>
+            </div>
+            <textarea id="txtReportPreview" rows="15" readonly placeholder="El contenido del informe de texto se mostrará aquí..."></textarea>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "./utils/storage.js": "./utils/storage.js",
+                "./utils/date-utils.js": "./utils/date-utils.js",
+                "./utils/backup-utils.js": "./utils/backup-utils.js",
+                "./students/students-utils.js": "./students/students-utils.js",
+                "./grade-activity/grade-activity-logic.js": "./grade-activity/grade-activity-logic.js",
+                "xlsx": "https://unpkg.com/xlsx/xlsx.mjs"
+            }
+        }
+    </script>
+    <script type="module" src="reports.js"></script>
+</body>
+</html>

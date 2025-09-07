@@ -1,0 +1,914 @@
+/* Inherits general styles from groups.css */
+
+.container {
+    max-width: 900px; /* Adjust container width as needed */
+    padding: 30px 40px;
+}
+
+h1 {
+    color: #20c997; /* A fresh green heading, distinctive for this page */
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 600;
+    border-bottom: 2px solid #e2fef5;
+    padding-bottom: 10px;
+}
+
+.section {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.section h2 {
+    color: #20c997; /* Green subheadings */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+    border-bottom: 1px solid #e2fef5;
+    padding-bottom: 10px;
+}
+
+/* Adjust specific h2 in form section */
+.schedule-form-section h2 {
+    color: #20c997;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+    border-bottom: 1px solid #e2fef5;
+    padding-bottom: 10px;
+}
+
+.section p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* NEW: Styles for the schedule filter section */
+.schedule-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #e6f7ff; /* Light blue background for filters */
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.schedule-filters .form-group {
+    flex: 1; /* Allow filter groups to grow */
+    min-width: 200px; /* Minimum width before wrapping */
+    margin-bottom: 0; /* Remove default form-group margin */
+}
+
+.schedule-filters label {
+    margin-bottom: 5px; /* Smaller margin for labels */
+    font-weight: 500;
+}
+
+.schedule-filters select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schedule-filters select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* NEW: Weekly Schedule Grid Styles */
+.weekly-schedule-section {
+    margin-bottom: 40px;
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+.calendar-navigation {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px; /* Space between items */
+    margin-bottom: 20px;
+    background-color: #e0f2f7;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.calendar-nav-button,
+.calendar-nav-input {
+    min-width: 40px; /* Adjust as needed for smaller buttons */
+    height: 38px; /* Consistent height for all nav elements */
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.calendar-nav-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0 10px; /* Adjusted padding */
+}
+
+.calendar-nav-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+}
+
+.calendar-nav-input {
+    background-color: #ffffff;
+    padding: 0 8px; /* Adjusted padding */
+    color: #333;
+    flex-grow: 1; /* Allow date input to take more space */
+    max-width: 150px; /* Limit max width of date picker */
+}
+
+.calendar-nav-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.calendar-week-display {
+    color: #333;
+    font-size: 1.2em; /* Slightly smaller to fit */
+    margin: 0;
+    flex-grow: 1; /* Allow display to take available space */
+    text-align: center;
+    order: 3; /* Position after buttons/input by default */
+    min-width: 200px; /* Ensure it has enough space to display week range */
+}
+
+.schedule-grid {
+    display: grid;
+    grid-template-columns: 80px repeat(5, 1fr); /* 1 for time labels, 5 for days */
+    grid-template-rows: auto auto 1fr; /* 3 rows: Day names, Dates, Content (time labels + day columns) */
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    min-width: 600px; /* Ensure a minimum width for the grid */
+}
+
+/* NEW: Styles for the first row (Day Names) */
+.schedule-day-name-row {
+    grid-column: 2 / -1; /* Span from column 2 to the end (column 6) */
+    grid-row: 1; /* First row */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns within this row */
+    background-color: #007bff; /* Example: blue background for the entire header row */
+    border-radius: 8px 8px 0 0; /* Rounded top corners */
+    overflow: hidden; /* For rounded corners */
+}
+.schedule-day-name-cell {
+    background-color: #007bff; /* Match parent */
+    color: white;
+    padding: 8px 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+.schedule-day-name-cell:last-child {
+    border-right: none;
+}
+/* Style for current day header within the new day name row */
+.schedule-day-name-cell.current-day-name {
+    background-color: #8A2BE2; /* Blue-Violet, a shade of purple */
+    color: white;
+    box-shadow: 0 2px 10px rgba(138, 43, 226, 0.4); /* Soft shadow */
+    border-color: #8A2BE2; /* Match border to background */
+}
+
+/* NEW: Styles for the second row (Dates) */
+.schedule-date-row {
+    grid-column: 2 / -1; /* Span across the 5 day columns */
+    grid-row: 2; /* Second row */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Internal grid for 5 dates */
+    background-color: #e0f2f7; /* Lighter background for dates */
+    font-size: 0.8em;
+    padding: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.schedule-date-cell {
+    text-align: center;
+    color: #555;
+    border-right: 1px solid #e9ecef;
+}
+.schedule-date-cell:last-child {
+    border-right: none;
+}
+/* Style for current day's date */
+.schedule-date-cell.current-day-date {
+    background-color: #fff9e6; /* Light yellow for current day date */
+    border: 1px solid #ffc107; /* Orange border for current day date */
+    border-radius: 4px;
+    margin: 0 2px; /* Slightly shrink to show border, prevent bleeding */
+}
+
+/* NEW: Top-left header cell ('Horas') spanning first two rows */
+.top-left-time-header {
+    grid-column: 1;
+    grid-row: 1 / 3; /* Spans across Day Names and Dates rows */
+    background-color: #0056b3; /* Darker blue for top-left corner */
+    color: white;
+    padding: 8px 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
+    border-right: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    display: flex; /* For centering content */
+    align-items: center;
+    justify-content: center;
+    z-index: 2; /* Ensure it's above potential overlaps with borders */
+}
+
+/* Container for the time labels */
+.time-label-column-container {
+    grid-column: 1; /* First column */
+    grid-row: 3; /* Starts in the third row */
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e9ecef;
+}
+
+.time-label-cell {
+    height: 40px; /* Height for a 30-minute interval line */
+    flex-shrink: 0;
+    background-color: #e0f2f7;
+    color: #333;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.85em;
+    border-bottom: 1px solid #e9ecef;
+    display: flex; /* Vertically center content */
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; /* Include padding in height */
+}
+
+.time-label-cell:last-child {
+    border-bottom: none;
+}
+
+/* Container for all day's schedule items (now a grid itself) */
+.day-column-container {
+    grid-column: 2 / -1; /* Span all day content columns */
+    grid-row: 3; /* Starts in the third row */
+    display: grid; /* Make it a grid for its internal columns (one per day) */
+    grid-template-columns: repeat(5, 1fr); /* 5 equal columns for each day's content */
+    height: 100%; /* Take full height of its grid area */
+    box-sizing: border-box;
+}
+
+/* NEW: Individual content wrapper for each day within the day-column-container */
+.day-content-wrapper {
+    position: relative; /* All schedule items will be absolute within this */
+    border-right: 1px solid #e9ecef;
+    height: 100%;
+    box-sizing: border-box;
+
+    /* Background gradient for minute lines, 1px dashed line for every 30 minutes */
+    background-image: repeating-linear-gradient(to bottom, #f0f0f0 0px, #f0f0f0 1px, transparent 1px, transparent 40px); /* 40px should match .time-label-cell height */
+    background-size: 100% 40px; /* Apply gradient for every 40px (30 min) */
+    background-position-y: -1px; /* Adjust to align lines properly, if needed */
+}
+
+.day-content-wrapper:last-child {
+    border-right: none;
+}
+
+/* NEW: Styles for non-class sessions to have a thin dark grey frame */
+.schedule-item.non-class-session {
+    border: 1px solid #6c757d; /* Thin dark grey frame */
+    border-left: 1px solid #6c757d; /* Override the default thick stripe with a thin one */
+    width: calc(100% - 2px); /* Adjust width for the 1px frame on both sides */
+    margin-left: 1px; /* Adjust margin for the 1px frame on left */
+    margin-right: 1px; /* Adjust margin for the 1px frame on right */
+    padding-left: 8px; /* Maintain padding */
+    padding-right: 8px; /* Maintain padding */
+}
+
+.schedule-item {
+    background-color: var(--session-color, #e9f5ff); /* Default light blue */
+    border-left: 4px solid var(--session-color-dark, #007bff); /* Default blue stripe */
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 1; /* Ensure it's above the grid lines */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    color: var(--text-color, #333); /* Text color derived from luminance */
+
+    /* For positioning within the grid - these will be set by JS dynamically */
+    position: absolute;
+    width: calc(100% - 8px); /* Account for padding/margin in container */
+    margin-left: 4px; /* Manual horizontal centering */
+    margin-right: 4px; /* Manual horizontal centering */
+    box-sizing: border-box; /* Include padding in dimensions */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+.schedule-item:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.schedule-item .session-display-name {
+    font-weight: bold;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.schedule-item .time-range {
+    font-size: 0.9em;
+    color: var(--text-color-light, #555); /* Lighter text color */
+}
+
+.schedule-item-controls {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 3px;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease;
+    z-index: 2; /* Ensure buttons are above the item content */
+}
+
+.schedule-item:hover .schedule-item-controls {
+    opacity: 1; /* Show on hover */
+}
+
+.schedule-item-controls button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-size: 0.7em;
+    cursor: pointer;
+    line-height: 1;
+    transition: background-color 0.2s ease;
+}
+
+.schedule-item-controls button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* NEW: Daily Notes Indicator (pencil icon) */
+.daily-notes-indicator {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.9em;
+    color: #8A2BE2; /* Purple color */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: help;
+    z-index: 2;
+}
+
+.daily-notes-indicator img {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+/* NEW: Mobile-only day header (initially hidden) */
+.mobile-day-header {
+    display: none;
+}
+
+/* Form specific styles in this page (reusing from groups.css as much as possible) */
+.schedule-form-section .form-group input[type="time"] {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    margin-bottom: 15px; /* Add some spacing */
+}
+
+.schedule-form-section .form-group input[type="time"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* NEW: Time Range Filter Section */
+.schedule-time-range-filter .form-group.time-range-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-start; /* Align to the start */
+    margin-bottom: 0;
+}
+
+.schedule-time-range-filter .form-group.time-range-inputs label {
+    margin-bottom: 0; /* Align label with input */
+    flex-shrink: 0; /* Prevent label from shrinking */
+    font-weight: 500;
+}
+
+.schedule-time-range-filter .form-group.time-range-inputs input[type="time"] {
+    flex-grow: 1; /* Allow time inputs to grow */
+    max-width: 150px; /* Limit max width */
+    min-width: 100px;
+    width: auto; /* Override calc(100% - 20px) */
+    margin-bottom: 0; /* Remove default margin */
+    padding: 8px 10px;
+    height: 38px; /* Consistent height */
+    box-sizing: border-box;
+}
+
+.schedule-time-range-filter .hint-text {
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+/* MODIFIED: Styles for day checkboxes */
+.day-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.day-checkboxes input[type="checkbox"] {
+    display: none; /* Hide default checkbox */
+}
+
+.day-checkboxes label {
+    background-color: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #ced4da;
+    font-weight: normal;
+    color: #555;
+    margin-bottom: 0; /* Override default label margin */
+    flex-shrink: 0; /* Prevent labels from shrinking */
+}
+
+.day-checkboxes input[type="checkbox"]:checked + label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.day-checkboxes input[type="checkbox"]:disabled + label {
+    background-color: #f0f0f0;
+    color: #999;
+    border-color: #e0e0e0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.info-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* NEW: Modal Styles (reusing from grade_activity.css) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Enhanced modal header, layout and action styling for task/meeting/note edit windows */
+.modal-content {
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    padding: 0; /* Changed from 30px */
+    border: 1px solid #888;
+    border-radius: 12px;
+    width: 80%; /* Could be more responsive */
+    max-width: 600px; /* Slightly wider for notes */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    text-align: center;
+    overflow: hidden; /* Ensure rounded corners are respected for inner elements */
+}
+
+/* NEW: Header inside modal with subtle accent and icon */
+.modal-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 18px 22px;
+    background-color: #f1fdf9; /* Light green for daily log modals */
+    border-bottom: 1px solid #e2fef5; /* Lighter green border */
+}
+.modal-header-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    padding: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.modal-header-text h2 {
+    margin: 0;
+    font-size: 1.25em;
+    color: #20c997; /* Green heading for notes modal */
+    border: none;
+    padding: 0;
+}
+.modal-sub {
+    margin: 4px 0 0 0;
+    font-size: 0.9em;
+    color: #556;
+}
+
+/* NEW: Two-column body grid for clearer form layout (only one column used for notes) */
+.modal-body-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column so description/textareas span full width */
+    gap: 18px;
+    padding: 18px 22px;
+    align-items: start;
+}
+.modal-column { /* inner wrapper for each column */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Textareas within the modal */
+.modal-content textarea {
+    width: 100%; /* Changed from calc(100% - 20px) to span full width */
+    padding: 10px;
+    margin-bottom: 0; /* Remove default margin */
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    resize: vertical; /* Allow vertical resizing */
+    box-sizing: border-box; /* Include padding in dimensions */
+}
+
+/* Buttons in modal actions: add icons and consistent spacing */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 16px 18px 22px 18px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
+}
+
+.modal-actions .create-button, .modal-actions .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+.modal-actions .create-button .btn-icon { width: 18px; height: 18px; filter: none; }
+.modal-actions .back-button .btn-icon { width: 16px; height: 16px; filter: none; } /* for cancel button */
+
+
+/* Close button */
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 12px; /* Changed from 15px */
+    right: 12px; /* Changed from 25px */
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    /* NEW: Add background and box-shadow for a more appealing button */
+    background: rgba(255,255,255,0.6);
+    border-radius: 8px;
+    border: none;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    z-index: 100; /* Ensure it's above header content */
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+/* NEW: Styles for note sections within the modal to create vertical spacing */
+.notes-section {
+    margin-bottom: 0px; /* Remove default section margin */
+}
+.notes-section .form-group {
+    margin-bottom: 12px; /* Standardize spacing between form groups */
+}
+.notes-section .form-group:last-child {
+    margin-bottom: 0; /* No bottom margin on the last form group */
+}
+
+
+/* NEW: Color palette for schedule entries (copied from groups.css) */
+.color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.color-option {
+    display: none; /* Hide the actual radio button */
+}
+
+.color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent; /* Default border */
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-option:checked + .color-swatch {
+    border-color: #007bff; /* Highlight selected swatch */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4); /* Glow effect for selection */
+    transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .section h2 {
+        font-size: 1.4em;
+    }
+
+    .form-group input[type="text"],
+    .form-group select,
+    .form-group textarea,
+    .form-group input[type="time"] {
+        width: 100%;
+    }
+
+    /* Adjust calendar navigation for smaller screens */
+    .calendar-navigation {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center; /* Center items when wrapped */
+    }
+    .calendar-nav-button {
+        flex-grow: 1; /* Allow buttons to expand to fill space */
+    }
+    .calendar-nav-input {
+        flex-grow: 1;
+        max-width: none; /* Remove max-width on small screens for better flex-grow behavior */
+        order: 2; /* Put date picker after prev/current week buttons */
+    }
+    .calendar-week-display {
+        font-size: 1.2em;
+        width: 100%;
+        order: -1; /* Move to top of navigation */
+    }
+
+    /* NEW responsive schedule styles */
+    .weekly-schedule-section {
+        overflow-x: hidden;
+    }
+
+    .schedule-grid {
+        display: block;
+        border: none;
+        min-width: unset;
+        grid-template-columns: 1fr;
+        overflow: visible;
+    }
+
+    .schedule-grid .top-left-time-header,
+    .schedule-grid .schedule-day-name-row,
+    .schedule-grid .schedule-date-row,
+    .schedule-grid .time-label-column-container {
+        display: none;
+    }
+
+    .day-column-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        grid-template-columns: 1fr;
+    }
+
+    .day-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        position: relative;
+        background-image: none;
+        height: auto;
+    }
+
+    .mobile-day-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    .mobile-day-header.current-day {
+        background-color: #8A2BE2;
+    }
+
+    .schedule-item {
+        position: static;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 10px;
+        gap: 10px;
+        box-sizing: border-box;
+        font-size: 1em;
+    }
+    
+    .schedule-item .time-range {
+        font-weight: bold;
+        flex-shrink: 0;
+        font-size: 0.9em;
+    }
+
+    .schedule-item .session-display-name {
+        flex-grow: 1;
+        white-space: normal;
+        text-align: left;
+        font-size: 1em;
+    }
+
+    .schedule-item .daily-notes-indicator {
+        position: static;
+        flex-shrink: 0;
+        font-size: 1em;
+        padding: 2px 4px;
+        bottom: auto;
+        right: auto;
+    }
+
+    .schedule-item .schedule-item-controls {
+        position: static;
+        opacity: 1;
+        flex-shrink: 0;
+        display: flex;
+        gap: 3px;
+        margin-left: auto;
+    }
+
+    .schedule-item-controls button {
+        font-size: 0.8em;
+        padding: 4px 6px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 0; /* Padding moved to modal-body-grid */
+    }
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+
+    /* MODIFIED: Responsive for day checkboxes */
+    .day-checkboxes {
+        gap: 10px;
+        justify-content: flex-start; /* Align checkboxes to start on small screens */
+    }
+
+    .day-checkboxes label {
+        padding: 6px 10px;
+        font-size: 0.9em;
+    }
+
+    /* NEW: Responsive for schedule filters */
+    .schedule-filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .schedule-filters .form-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    /* NEW: Responsive modal-body-grid */
+    .modal-body-grid {
+        grid-template-columns: 1fr;
+        padding: 15px 20px;
+    }
+
+    /* NEW: Responsive modal-actions */
+    .modal-actions {
+        flex-direction: column;
+        padding: 15px 20px 20px;
+    }
+    .modal-actions .create-button, .modal-actions .back-button {
+        width: 100%;
+        min-width: unset;
+    }
+
+    /* NEW: Responsive for time range filter */
+    .schedule-time-range-filter .form-group.time-range-inputs {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .schedule-time-range-filter .form-group.time-range-inputs label {
+        width: 100%; /* Take full width */
+        text-align: left;
+    }
+    .schedule-time-range-filter .form-group.time-range-inputs input[type="time"] {
+        max-width: none; /* Allow to take full width */
+        width: 100%;
+    }
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Grupos</title>
+    <link rel="stylesheet" href="groups.css">
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <button id="globalSaveButton" class="global-save-button">💾</button>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalAgendaButton" class="action-button">📅</button>
+        <button id="globalDailyLogButton" class="action-button">✏️</button>
+    </div>
+    <div class="container">
+        <h1>Gestión de Grupos</h1>
+
+        <div class="section">
+            <h2>Grupos Existentes (Haz click para gestionar alumnos)</h2>
+            <ul id="groupsList">
+                <!-- Group items will be loaded here by JavaScript -->
+                <li class="no-groups-message">No hay grupos creados aún.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Crear Nuevo Grupo</h2>
+            <form id="createGroupForm">
+                <div class="form-group">
+                    <label for="subjectName">Materia:</label>
+                    <input type="text" id="subjectName" required placeholder="Ej: Matemáticas">
+                </div>
+                <div class="form-group">
+                    <label for="gradeLevel">Curso:</label>
+                    <select id="gradeLevel" required>
+                        <option value="">Selecciona un curso</option>
+                        <option value="1º ESO">1º ESO</option>
+                        <option value="2º ESO">2º ESO</option>
+                        <option value="3º ESO">3º ESO</option>
+                        <option value="4º ESO">4º ESO</option>
+                        <option value="1º Bachillerato">1º Bachillerato</option>
+                        <option value="2º Bachillerato">2º Bachillerato</option>
+                        <option value="F.P.B. 1">F.P.B. 1</option>
+                        <option value="F.P.B. 2">F.P.B. 2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="groupLetter">Grupo:</label>
+                    <input type="text" id="groupLetter" required placeholder="Ej: a, grupo 1, curso a (minúsculas y espacios permitidos)">
+                </div>
+                <div class="form-group">
+                    <label>Color del Grupo:</label>
+                    <div class="color-palette">
+                        <input type="radio" id="color-pastel1" name="groupColor" value="#FFC0CB" class="color-option">
+                        <label for="color-pastel1" class="color-swatch pastel1" style="background-color: #FFC0CB;" title="Rosa Suave"></label>
+
+                        <input type="radio" id="color-pastel2" name="groupColor" value="#A7DBD8" class="color-option">
+                        <label for="color-pastel2" class="color-swatch pastel2" style="background-color: #A7DBD8;" title="Azul Turquesa"></label>
+
+                        <input type="radio" id="color-pastel3" name="groupColor" value="#98FB98" class="color-option">
+                        <label for="color-pastel3" class="color-swatch pastel3" style="background-color: #98FB98;" title="Verde Menta"></label>
+
+                        <input type="radio" id="color-pastel4" name="groupColor" value="#FFECB3" class="color-option">
+                        <label for="color-pastel4" class="color-swatch pastel4" style="background-color: #FFECB3;" title="Amarillo Crema"></label>
+
+                        <input type="radio" id="color-pastel5" name="groupColor" value="#E0BBE4" class="color-option">
+                        <label for="color-pastel5" class="color-swatch pastel5" style="background-color: #E0BBE4;" title="Lila Pastel"></label>
+
+                        <input type="radio" id="color-pastel6" name="groupColor" value="#FFB399" class="color-option">
+                        <label for="color-pastel6" class="color-swatch pastel6" style="background-color: #FFB399;" title="Melocotón"></label>
+
+                        <input type="radio" id="color-pastel7" name="groupColor" value="#B0E0E6" class="color-option">
+                        <label for="color-pastel7" class="color-swatch pastel7" style="background-color: #B0E0E6;" title="Azul Celeste"></label>
+
+                        <input type="radio" id="color-pastel8" name="groupColor" value="#D8BFD8" class="color-option">
+                        <label for="color-pastel8" class="color-swatch pastel8" style="background-color: #D8BFD8;" title="Malva Claro"></label>
+
+                        <input type="radio" id="color-pastel9" name="groupColor" value="#ADD8E6" class="color-option">
+                        <label for="color-pastel9" class="color-swatch pastel9" style="background-color: #ADD8E6;" title="Azul Bebé"></label>
+
+                        <input type="radio" id="color-pastel10" name="groupColor" value="#F88379" class="color-option">
+                        <label for="color-pastel10" class="color-swatch pastel10" style="background-color: #F88379;" title="Coral Suave"></label>
+
+                        <input type="radio" id="color-pastel11" name="groupColor" value="#C0D9D9" class="color-option">
+                        <label for="color-pastel11" class="color-swatch pastel11" style="background-color: #C0D9D9;" title="Azul Grisáceo"></label>
+
+                        <input type="radio" id="color-pastel12" name="groupColor" value="#FFA07A" class="color-option">
+                        <label for="color-pastel12" class="color-swatch pastel12" style="background-color: #FFA07A;" title="Salmón Claro"></label>
+
+                        <input type="radio" id="color-pastel13" name="groupColor" value="#DDA0DD" class="color-option">
+                        <label for="color-pastel13" class="color-swatch pastel13" style="background-color: #DDA0DD;" title="Ciruela Pálido"></label>
+
+                        <!-- Custom color option -->
+                        <input type="radio" id="color-custom" name="groupColor" value="custom" class="color-option">
+                        <label for="color-custom" class="color-swatch custom-swatch" title="Color personalizado" style="display:flex; align-items:center; justify-content:center; font-size:0.9em; background: linear-gradient(135deg,#fff,#ccc);">🎨</label>
+                        <input type="color" id="customColor" value="#FFB399" title="Elige un color" class="custom-color-input" style="display:none; margin-left:6px; width:34px; height:34px; padding:0; border-radius:6px;">
+                    </div>
+                </div>
+                <button type="submit" class="create-button" id="submitGroupButton">Crear Grupo</button>
+                <button type="button" class="back-button" id="cancelEditGroupButton" style="display:none; margin-left: 10px;">Cancelar Edición</button>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="groups.js"></script>
+</body>
+</html>

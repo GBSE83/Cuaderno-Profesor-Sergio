@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Configuración - Cuaderno del Profesor</title>
+    <link rel="stylesheet" href="groups.css">
+    <style>
+        .container { max-width:700px; }
+        .section { text-align:left; }
+        .restore-actions { display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; }
+        .restore-actions .delete-button { padding:10px 16px; }
+        .settings-logout-container { position: fixed; bottom: 18px; right: 18px; z-index: 1100; }
+        .settings-gear { background:#fff; border:none; font-size:1.6rem; width:48px; height:48px; border-radius:8px; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; transition: transform .12s ease, box-shadow .12s ease;}
+        .settings-gear:hover { transform: scale(1.04); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+    </style>
+</head>
+<body>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+    </div>
+    <div class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <button id="globalSaveButton" class="global-save-button">💾</button>
+    </div>
+    <div class="settings-logout-container">
+        <button id="logoutButtonSettings" class="settings-gear" title="Cerrar sesión">🚪</button>
+    </div>
+
+    <div class="container">
+        <h1>Configuración</h1>
+
+        <div class="section">
+            <h2>Restaurar Cuaderno del Profesor</h2>
+            <p class="hint-text">Desde aquí puedes vaciar los datos locales o eliminar las copias de seguridad almacenadas en esta web.</p>
+            <div class="restore-actions">
+                <button id="clearAllDataButton" class="delete-button">Vaciar todos los datos</button>
+                <button id="deleteBackupsButton" class="delete-button" title="Eliminar copias almacenadas">Eliminar copias de seguridad</button>
+            </div>
+            <p style="margin-top:14px;color:#6c757d;font-size:0.95em;">Nota: "Eliminar copias de seguridad" borra las copias guardadas en la web; "Vaciar todos los datos" deja las copias intactas.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { modalConfirm, modalAlert, handleLoadBackup, handleSaveBackup } from './utils/backup-utils.js';
+        import { clearAllAppData } from './utils/storage.js';
+
+        document.getElementById('globalHomeButton').addEventListener('click', () => { window.location.href = 'index.html'; });
+        document.getElementById('globalSaveButton').addEventListener('click', handleSaveBackup);
+        document.getElementById('globalLoadButton').addEventListener('click', handleLoadBackup);
+
+        document.getElementById('deleteBackupsButton').addEventListener('click', async () => {
+            const first = await modalConfirm('¿Eliminar TODAS las copias de seguridad almacenadas en esta web? Esta acción no se puede deshacer.');
+            if (!first) return;
+            const second = await modalConfirm('Confirmar de nuevo: ¿Seguro que quieres eliminar todas las copias?');
+            if (!second) return;
+            localStorage.removeItem('web_backups');
+            await modalAlert('Todas las copias almacenadas han sido eliminadas.');
+            window.location.reload();
+        });
+
+        document.getElementById('clearAllDataButton').addEventListener('click', async () => {
+            const ok = await modalConfirm('Vaciar todos los datos eliminará la mayor parte de la información local de la aplicación de forma permanente.\n\nLas copias de seguridad almacenadas en esta web NO se eliminarán.\n\n¿Continuar?');
+            if (!ok) return;
+            clearAllAppData();
+            await modalAlert('Todos los datos han sido vaciados. La página se recargará.');
+            window.location.reload();
+        });
+
+        const logoutBtn = document.getElementById('logoutButtonSettings');
+        logoutBtn.addEventListener('click', async () => {
+            const ok = await modalConfirm('¿Cerrar sesión?');
+            if (!ok) return;
+            sessionStorage.removeItem('app_admin_authenticated');
+            await modalAlert('Sesión cerrada.');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

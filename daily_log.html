@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horario y Anotaciones Diarias</title>
+    <link rel="stylesheet" href="groups.css">
+    <link rel="stylesheet" href="daily_log.css">
+</head>
+<body>
+    <div id="globalActionsContainer" class="global-actions-container">
+        <button id="globalLoadButton" class="global-load-button">📂</button>
+        <div id="globalSaveButton" class="global-save-button">💾</div>
+    </div>
+    <div class="global-left-actions-container">
+        <div id="globalHomeButton" class="global-home-button">🏠</div>
+        <button id="globalAgendaButton" class="action-button">📅</button>
+    </div>
+    <div class="container">
+        <h1>Horario y Anotaciones Diarias</h1>
+
+        <!-- NEW: Weekly Schedule Section -->
+        <div class="section weekly-schedule-section">
+            <h2>Horario Semanal de Clases</h2>
+            <div class="schedule-filters">
+                <div class="form-group">
+                    <label for="scheduleTypeFilter">Mostrar sesiones:</label>
+                    <select id="scheduleTypeFilter">
+                        <option value="all">Todos los tipos</option>
+                        <option value="class_all">Clases (todos los grupos)</option>
+                        <!-- Individual group classes will be added by JS dynamically -->
+                        <option value="recess">Recreo</option>
+                        <option value="duty">Guardias</option>
+                        <option value="meeting">Reuniones</option>
+                        <option value="free">Tiempo Libre</option>
+                        <option value="other">Otros tipos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="scheduleNotesFilter">Estado de anotaciones:</label>
+                    <select id="scheduleNotesFilter">
+                        <option value="all_notes">Todas</option>
+                        <option value="has_notes">Con anotaciones</option>
+                        <option value="no_notes">Sin anotaciones</option>
+                    </select>
+                </div>
+            </div>
+            <div class="calendar-navigation">
+                <button id="prevWeekButton" class="calendar-nav-button">←</button>
+                <button id="currentWeekButton" class="calendar-nav-button">Hoy</button>
+                <input type="date" id="datePicker" class="calendar-nav-input">
+                <h3 id="weekDisplay" class="calendar-week-display"></h3>
+                <button id="nextWeekButton" class="calendar-nav-button">→</button>
+            </div>
+            <div id="scheduleGrid" class="schedule-grid">
+                <!-- Grid headers and content populated by JS -->
+            </div>
+            <p id="noScheduleMessage" class="info-message" style="display: none;">No hay clases programadas. Añade una a continuación.</p>
+        </div>
+
+        <!-- NEW: Time Range Selector -->
+        <div class="section schedule-time-range-filter">
+            <h2>Rango de Horas Mostradas</h2>
+            <div class="form-group time-range-inputs">
+                <label for="displayStartHour">Hora de inicio:</label>
+                <input type="time" id="displayStartHour" required min="00:00" max="23:59" value="08:00">
+                <label for="displayEndHour">Hora de fin:</label>
+                <input type="time" id="displayEndHour" required min="00:00" max="23:59" value="16:00">
+            </div>
+            <p class="hint-text">Ajusta la franja horaria visible en el horario semanal.</p>
+        </div>
+
+        <!-- NEW: Form to Add/Edit Schedule Entry -->
+        <div class="section schedule-form-section">
+            <h2>Añadir/Editar Sesión en Horario</h2>
+            <form id="scheduleEntryForm">
+                <div class="form-group">
+                    <label for="scheduleEntryType">Tipo de Sesión:</label>
+                    <select id="scheduleEntryType" required>
+                        <option value="class">Clase con Grupo</option>
+                        <option value="recess">Recreo</option>
+                        <option value="duty">Guardia</option>
+                        <option value="meeting">Reunión</option>
+                        <option value="free">Tiempo Libre</option>
+                        <option value="other">Otro</option>
+                    </select>
+                </div>
+
+                <div id="classFields" class="form-group">
+                    <label for="scheduleGroupSelect">Grupo:</label>
+                    <select id="scheduleGroupSelect">
+                        <option value="">Selecciona un grupo</option>
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+
+                <div id="genericFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="customEntryName">Nombre de la Sesión:</label>
+                        <input type="text" id="customEntryName" placeholder="Ej: Recreo, Guardia de Patio, Reunión de Departamento">
+                    </div>
+                    <div class="form-group">
+                        <label>Color de la Sesión:</label>
+                        <div class="color-palette">
+                            <input type="radio" id="schedule-color-pastel1" name="scheduleEntryColor" value="#FFC0CB" class="color-option">
+                            <label for="schedule-color-pastel1" class="color-swatch pastel1" style="background-color: #FFC0CB;" title="Rosa Suave"></label>
+
+                            <input type="radio" id="schedule-color-pastel2" name="scheduleEntryColor" value="#A7DBD8" class="color-option">
+                            <label for="schedule-color-pastel2" class="color-swatch pastel2" style="background-color: #A7DBD8;" title="Azul Turquesa"></label>
+
+                            <input type="radio" id="schedule-color-pastel3" name="scheduleEntryColor" value="#98FB98" class="color-option">
+                            <label for="schedule-color-pastel3" class="color-swatch pastel3" style="background-color: #98FB98;" title="Verde Menta"></label>
+
+                            <input type="radio" id="schedule-color-pastel4" name="scheduleEntryColor" value="#FFECB3" class="color-option">
+                            <label for="schedule-color-pastel4" class="color-swatch pastel4" style="background-color: #FFECB3;" title="Amarillo Crema"></label>
+
+                            <input type="radio" id="schedule-color-pastel5" name="scheduleEntryColor" value="#E0BBE4" class="color-option">
+                            <label for="schedule-color-pastel5" class="color-swatch pastel5" style="background-color: #E0BBE4;" title="Lila Pastel"></label>
+
+                            <input type="radio" id="schedule-color-pastel6" name="scheduleEntryColor" value="#FFB399" class="color-option">
+                            <label for="schedule-color-pastel6" class="color-swatch pastel6" style="background-color: #FFB399;" title="Melocotón"></label>
+
+                            <input type="radio" id="schedule-color-pastel7" name="scheduleEntryColor" value="#B0E0E6" class="color-option">
+                            <label for="schedule-color-pastel7" class="color-swatch pastel7" style="background-color: #B0E0E6;" title="Azul Celeste"></label>
+
+                            <input type="radio" id="schedule-color-pastel8" name="scheduleEntryColor" value="#D8BFD8" class="color-option">
+                            <label for="schedule-color-pastel8" class="color-swatch pastel8" style="background-color: #D8BFD8;" title="Malva Claro"></label>
+
+                            <input type="radio" id="schedule-color-pastel9" name="scheduleEntryColor" value="#ADD8E6" class="color-option">
+                            <label for="schedule-color-pastel9" class="color-swatch pastel9" style="background-color: #ADD8E6;" title="Azul Bebé"></label>
+
+                            <input type="radio" id="schedule-color-pastel10" name="scheduleEntryColor" value="#F88379" class="color-option">
+                            <label for="schedule-color-pastel10" class="color-swatch pastel10" style="background-color: #F88379;" title="Coral Suave"></label>
+
+                            <!-- NEW: Grey, White, and Black color options -->
+                            <input type="radio" id="schedule-color-grey1" name="scheduleEntryColor" value="#CCCCCC" class="color-option">
+                            <label for="schedule-color-grey1" class="color-swatch grey1" style="background-color: #CCCCCC;" title="Gris Claro"></label>
+
+                            <input type="radio" id="schedule-color-grey2" name="scheduleEntryColor" value="#888888" class="color-option">
+                            <label for="schedule-color-grey2" class="color-swatch grey2" style="background-color: #888888;" title="Gris Medio"></label>
+
+                            <input type="radio" id="schedule-color-grey3" name="scheduleEntryColor" value="#444444" class="color-option">
+                            <label for="schedule-color-grey3" class="color-swatch grey3" style="background-color: #444444;" title="Gris Oscuro"></label>
+
+                            <input type="radio" id="schedule-color-white" name="scheduleEntryColor" value="#FFFFFF" class="color-option">
+                            <label for="schedule-color-white" class="color-swatch white" style="background-color: #FFFFFF; border: 1px solid #ddd;" title="Blanco"></label>
+
+                            <input type="radio" id="schedule-color-black" name="scheduleEntryColor" value="#000000" class="color-option">
+                            <label for="schedule-color-black" class="color-swatch black" style="background-color: #000000;" title="Negro"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleDayOfWeek">Día(s) de la Semana:</label>
+                    <div id="scheduleDayOfWeekCheckboxes" class="day-checkboxes">
+                        <input type="checkbox" id="day-Lunes" name="scheduleDayOfWeek" value="Lunes">
+                        <label for="day-Lunes">Lunes</label>
+                        <input type="checkbox" id="day-Martes" name="scheduleDayOfWeek" value="Martes">
+                        <label for="day-Martes">Martes</label>
+                        <input type="checkbox" id="day-Miércoles" name="scheduleDayOfWeek" value="Miércoles">
+                        <label for="day-Miércoles">Miércoles</label>
+                        <input type="checkbox" id="day-Jueves" name="scheduleDayOfWeek" value="Jueves">
+                        <label for="day-Jueves">Jueves</label>
+                        <input type="checkbox" id="day-Viernes" name="scheduleDayOfWeek" value="Viernes">
+                        <label for="day-Viernes">Viernes</label>
+                    </div>
+                </div>
+                <div class="form-group time-group">
+                    <label for="scheduleStartTime">Hora de Inicio:</label>
+                    <input type="time" id="scheduleStartTime" required min="08:00" max="15:30">
+                </div>
+                <div class="form-group time-group">
+                    <label for="scheduleEndTime">Hora de Fin:</label>
+                    <input type="time" id="scheduleEndTime" required min="08:00" max="15:30">
+                </div>
+                <button type="submit" class="create-button" id="submitScheduleEntryButton">Añadir Sesión</button>
+                <button type="button" class="back-button" id="cancelEditScheduleButton" style="display:none; margin-left: 10px;">Cancelar Edición</button>
+            </form>
+        </div>
+
+        <!-- NEW: Section for Excel Import/Export -->
+        <div class="section excel-import-export-section">
+            <h2>Importar/Exportar Horario (Excel)</h2>
+            <p>Puedes descargar el horario actual como un archivo Excel, modificarlo y volver a cargarlo para actualizar tu horario de forma masiva.</p>
+            <div class="form-actions" style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button id="exportScheduleButton" class="create-button">Descargar Horario (Excel)</button>
+                <label for="importScheduleInput" class="create-button" style="cursor: pointer;">
+                    Cargar Horario (Excel)
+                    <input type="file" id="importScheduleInput" accept=".xlsx, .xls" style="display: none;">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Daily Notes Modal Structure -->
+    <div id="dailyNotesModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeDailyNotesModal" title="Cerrar"><img src="x_icon.png" alt="Cerrar" style="width:18px; height:18px" /></button>
+
+            <div class="modal-header">
+                <img src="pencil_icon.png" alt="Anotaciones" class="modal-header-icon" />
+                <div class="modal-header-text">
+                    <h2 id="modalDailyNotesTitle">Anotaciones diarias</h2>
+                    <p id="modalDailyNotesSub" class="modal-sub"></p> <!-- Subtitle for session context -->
+                </div>
+            </div>
+
+            <div class="modal-body-grid">
+                <div class="modal-column">
+                    <!-- Class Session Notes (Existing) -->
+                    <div id="notesClassSpecific" class="notes-section">
+                        <div class="form-group">
+                            <label for="notesContents">Contenidos tratados:</label>
+                            <textarea id="notesContents" rows="4" placeholder="Ej: Tema 3, ejercicios 1-5"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="notesTasks">Tareas programadas:</label>
+                            <textarea id="notesTasks" rows="4" placeholder="Ej: Entregar trabajo final, estudiar para el examen"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Duty Session Notes (New) -->
+                    <div id="notesDutySpecific" class="notes-section" style="display: none;">
+                        <div class="form-group">
+                            <label for="notesDutyGroup">Grupo:</label>
+                            <textarea id="notesDutyGroup" rows="2" placeholder="Ej: 1º ESO B"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="notesAbsentTeacher">Profesor Ausente:</label>
+                            <textarea id="notesAbsentTeacher" rows="2" placeholder="Ej: María García"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Generic Session Notes (New, also for Duty) -->
+                    <div id="notesGeneric" class="notes-section" style="display: none;">
+                        <div class="form-group">
+                            <label for="notesSummary">Resumen:</label>
+                            <textarea id="notesSummary" rows="4" placeholder="Ej: Reunión del departamento de matemáticas para planificar el tercer trimestre."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Common fields for all non-class sessions -->
+                    <div id="notesCommon" class="notes-section" style="display: none;">
+                        <div class="form-group">
+                            <label for="notesPending">Asuntos pendientes:</label>
+                            <textarea id="notesPending" rows="4" placeholder="Ej: Revisar dudas de Juan, enviar correo a familias"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="notesIncidents">Incidencias:</label>
+                            <textarea id="notesIncidents" rows="4" placeholder="Ej: Pedro tuvo un comportamiento disruptivo"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="saveDailyNotesButton" class="create-button"><img src="tick_icon.png" alt="" class="btn-icon" /> Guardar Anotaciones</button>
+                <button id="cancelDailyNotesButton" class="create-button"><img src="x_icon.png" alt="" class="btn-icon" /> Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "./utils/storage.js": "./utils/storage.js",
+                "./utils/date-utils.js": "./utils/date-utils.js",
+                "./utils/backup-utils.js": "./utils/backup-utils.js",
+                "xlsx": "https://unpkg.com/xlsx/xlsx.mjs"
+            }
+        }
+    </script>
+    <script type="module" src="daily_log.js"></script>
+</body>
+</html>
