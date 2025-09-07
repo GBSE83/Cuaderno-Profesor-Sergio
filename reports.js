@@ -1,6 +1,6 @@
 import { formatDateTimeForFilename, formatDate, formatDateForReportFilename, formatGradeLevelShort, addDays } from './utils/date-utils.js';
 import { getGroups, getAllAppData, getSessionItem, setSessionItem, removeSessionItem, getAttendanceRecords, getCustomGradingTypes } from './utils/storage.js';
-import { handleLoadBackup, handleSaveBackup, modalConfirm, modalAlert, modalOptions, forceDownload } from './utils/backup-utils.js';
+import { handleLoadBackup, handleSaveBackup, modalConfirm, modalAlert, modalOptions, forceDownload, modalPrompt } from './utils/backup-utils.js';
 import * as XLSX from 'xlsx'; 
 import { splitFullName, sortStudents } from './students/students-utils.js'; 
 import { getLocalizedActivityTypeName } from './grade-activity/grade-activity-logic.js';
@@ -1604,8 +1604,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileGroupPart = selectedGroupKeys.length === 1
             ? (() => { const g = allGroups.find(g => `${g.subjectName}-${g.gradeLevel}-${g.groupLetter}` === selectedGroupKeys[0]); return g ? `${g.subjectName} ${formatGradeLevelShort(g.gradeLevel)} ${g.groupLetter}` : selectedGroupKeys[0]; })()
             : 'varios grupos';
-        const filenameBase = `Informe de Evaluación (${fileGroupPart}) - ${formatDateTimeForFilename(new Date())}.xlsx`;
-        // Use robust forceDownload helper to improve compatibility with embedded webviews/APK wrappers
-        forceDownload(blob, filenameBase);
+        const suggested = `Informe de Evaluación (${fileGroupPart}) - ${formatDateTimeForFilename(new Date())}.xlsx`;
+        const edited = await modalPrompt('Nombre del archivo Excel (puedes editarlo):', suggested, 'Editar nombre de archivo');
+        if (edited === null) { await modalAlert('Descarga cancelada.'); return; }
+        let finalName = (edited.trim() || suggested).replace(/[^a-z0-9\-_. ()]/gi, '_');
+        if (!/\.xlsx$/i.test(finalName)) finalName += '.xlsx';
+        forceDownload(blob, finalName);
     }
 });

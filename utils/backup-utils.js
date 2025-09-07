@@ -115,12 +115,18 @@ export const handleSaveBackup = () => {
         const pad = (n) => String(n).padStart(2, '0');
         const datePart = `${now.getFullYear()}-${monthShort}-${pad(now.getDate())}`;
         const timePart = `${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
-        const filename = `Cuaderno del Profesor - ${datePart} - ${timePart}.json`;
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        // Use robust forced download helper
-        forceDownload(blob, filename);
-        modalAlert('Copia de seguridad descargada correctamente.');
-        document.body.removeChild(modal.overlay);
+        const suggested = `Cuaderno del Profesor - ${datePart} - ${timePart}.json`;
+        (async () => {
+            let res = await modalPrompt('Nombre del archivo de copia (puedes editarlo):', suggested, 'Editar nombre de archivo');
+            if (res === null) return; // Cancelled: do not download
+            let name = res.trim() ? res.trim() : suggested;
+            name = name.replace(/[^a-z0-9\-_. ()]/gi, '_');
+            if (!/\.json$/i.test(name)) name += '.json';
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            forceDownload(blob, name);
+            await modalAlert('Copia de seguridad descargada correctamente.');
+            document.body.removeChild(modal.overlay);
+        })();
     });
 
     btnView.addEventListener('click', () => {
@@ -419,7 +425,6 @@ export const handleLoadBackup = () => {
                 // NEW: Event listener for btnDownloadFile
                 btnDownloadFile.addEventListener('click', () => {
                     const jsonString = JSON.stringify(entry.data, null, 2);
-                    
                     const filenameDate = new Date(entry.createdAt);
                     const filenameMonthShort = filenameDate.toLocaleString('es-ES', { month: 'short' }).replace('.', '').toLowerCase();
                     const pad = (n) => String(n).padStart(2, '0');
@@ -429,11 +434,17 @@ export const handleLoadBackup = () => {
                     // Sanitize entry.name for use in filename
                     const sanitizedName = (entry.name || 'Copia de Seguridad').replace(/[^a-z0-9\-\_ ]/gi, '_');
                     
-                    const filename = `${sanitizedName} - ${filenameDatePart} - ${filenameTimePart}.json`;
-
-                    const blob = new Blob([jsonString], { type: 'application/json' });
-                    forceDownload(blob, filename);
-                    modalAlert('Archivo de copia de seguridad descargado.');
+                    const defaultName = `${sanitizedName} - ${filenameDatePart} - ${filenameTimePart}.json`;
+                    (async () => {
+                        let res = await modalPrompt('Nombre del archivo de copia (puedes editarlo):', defaultName, 'Editar nombre de archivo');
+                        if (res === null) return; // Cancelled: do not download
+                        let name = res.trim() ? res.trim() : defaultName;
+                        name = name.replace(/[^a-z0-9\-_. ()]/gi, '_');
+                        if (!/\.json$/i.test(name)) name += '.json';
+                        const blob = new Blob([jsonString], { type: 'application/json' });
+                        forceDownload(blob, name);
+                        await modalAlert('Archivo de copia de seguridad descargado.');
+                    })();
                 });
             });
         }
