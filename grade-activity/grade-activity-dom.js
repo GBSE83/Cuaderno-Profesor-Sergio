@@ -321,6 +321,22 @@ export const attachGradeInputListeners = (studentGradesList, setUnsavedChangesFl
                 }
             }
         }
+        if (target.matches('.rubric-input')) {
+            const grid = target.closest('.rubric-grid');
+            if (grid) {
+                const inputs = Array.from(grid.querySelectorAll('.rubric-input'));
+                const weights = Array.from(grid.querySelectorAll('.rubric-weight'))
+                    .map(w => parseInt((w.textContent || '0').replace('%',''), 10) || 0);
+                const scores = inputs.map(inp => {
+                    const v = parseFloat(inp.value);
+                    const clamped = isNaN(v) ? 0 : Math.max(0, Math.min(10, v));
+                    return clamped;
+                });
+                const total = weights.reduce((sum, w, i) => sum + (w / 100) * (scores[i] || 0), 0);
+                const totalEl = grid.querySelector('.rubric-total');
+                if (totalEl) totalEl.textContent = total.toFixed(2);
+            }
+        }
     });
 
     // NEW: Handle click on rubric info icon to show description in a modal

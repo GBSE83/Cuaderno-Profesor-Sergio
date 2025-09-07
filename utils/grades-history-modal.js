@@ -375,6 +375,9 @@ const attachGradesHistorySaveListener = () => {
                                 }
                             }
                             break;
+                        case 'qualitative':
+                            // No numeric validation for qualitative; allowed values handled by the <select>
+                            break;
                         case 'numeric_decimal':
                         default:
                             if (newGradeRaw !== '' && newGradeRaw !== '-' && newGradeRaw !== 'NP') {
