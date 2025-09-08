@@ -37,13 +37,14 @@ export const loadStudentsFromText = async (textList, currentGroup, saveAllGroups
         for (const line of rawStudentLines) {
             let studentFullName;
             if (line.includes(',')) {
-                // Format: Apellidos, Nombre
+                // As per user request: text before comma is Last Name, text after comma is First Name.
+                // Store in "LastName, FirstName" format.
                 const parts = line.split(',');
                 const lastName = parts[0].trim();
-                const firstName = parts.slice(1).join(',').trim(); // Handle cases like "Doe, Jr., John"
-                studentFullName = `${firstName} ${lastName}`;
+                const firstName = parts.slice(1).join(',').trim(); 
+                studentFullName = `${lastName}, ${firstName}`;
             } else {
-                // Assume it's a full name without a specific order
+                // Assume it's a full name without a specific order (e.g., "FirstName LastName")
                 studentFullName = line;
             }
 

@@ -29,18 +29,28 @@ export const ensureStudentDetails = (student) => {
 
 /**
  * Helper to split a full name into a 'first name' and 'last name' component.
- * It takes the first word as the first name and the rest as the last name.
+ * It tries to detect "LastName, FirstName" format first, then falls back to "FirstName LastName".
  * @param {string} fullName - The full name of the student.
  * @returns {object} An object with firstName and lastName properties.
  */
 export const splitFullName = (fullName) => {
-    const parts = fullName.trim().split(/\s+/); // Split by one or more spaces
-    if (parts.length === 0) {
-        return { firstName: '', lastName: '' };
+    const trimmedFullName = fullName.trim();
+    const commaIndex = trimmedFullName.indexOf(',');
+    if (commaIndex !== -1) {
+        // Assume "LastName, FirstName" format
+        const lastName = trimmedFullName.substring(0, commaIndex).trim();
+        const firstName = trimmedFullName.substring(commaIndex + 1).trim();
+        return { firstName, lastName };
+    } else {
+        // Assume "FirstName LastName" format (or just FirstName if only one word)
+        const parts = trimmedFullName.split(/\s+/); // Split by one or more spaces
+        if (parts.length === 0) {
+            return { firstName: '', lastName: '' };
+        }
+        const firstName = parts[0];
+        const lastName = parts.slice(1).join(' '); // Join the rest as last name
+        return { firstName, lastName };
     }
-    const firstName = parts[0];
-    const lastName = parts.slice(1).join(' '); // Join the rest as last name
-    return { firstName, lastName };
 };
 
 // Helper to extract first and last name parts for sorting

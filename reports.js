@@ -1352,14 +1352,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         // NEW: show informational modal before generating the Excel report
-        const proceed = await modalConfirm('Se va a generar el informe de Excel. ¿Deseas continuar?', 'Generar Informe');
-        if (!proceed) return;
-        generateGradesXlsx();
+        const choice = await modalOptions('¿En qué formato deseas descargar el informe?', [
+            { text: 'Excel (.xlsx)', value: 'xlsx', class: 'primary' },
+            { text: 'Texto (.txt)', value: 'txt' }
+        ], 'Generar Informe');
+        if (!choice) return;
+        const baseName = await buildSuggestedReportFilenameBase(allGroups, selectedGroupKeys);
+        const inputName = await modalPrompt('Nombre del archivo (puedes editarlo, la extensión se ajustará):', baseName, 'Nombre de archivo');
+        if (inputName === null) { await modalAlert('Descarga cancelada.'); return; }
+        const safeBase = (inputName.trim() || baseName).replace(/[^a-z0-9\-_. ()]/gi, '_').replace(/\.(xlsx|txt)$/i,'');
+        choice === 'xlsx' ? generateGradesXlsx(safeBase + '.xlsx') : generateGradesTxt(safeBase + '.txt');
     });
 
-    async function generateGradesXlsx() {
-        if (selectedGroupKeys.length === 0) { await modalAlert('Selecciona al menos un grupo.'); return; }
+    async function buildSuggestedReportFilenameBase(allGroups, selectedGroupKeys) {
+        const part = selectedGroupKeys.length === 1
+            ? (() => { const g = allGroups.find(g => `${g.subjectName}-${g.gradeLevel}-${g.groupLetter}` === selectedGroupKeys[0]); return g ? `Informe de Evaluación (${g.subjectName} ${formatGradeLevelShort(g.gradeLevel)} ${g.groupLetter})` : 'Informe de Evaluación (grupo)'; })()
+            : 'Informe de Evaluación (varios grupos)';
+        return `${part} - ${formatDateTimeForFilename(new Date())}`;
+    }
 
+    async function generateGradesXlsx(overrideFileName = null) {
+        if (selectedGroupKeys.length === 0) { await modalAlert('Selecciona al menos un grupo.'); return; }
         const wb = XLSX.utils.book_new();
 
         for (const gk of selectedGroupKeys) {
@@ -1604,11 +1617,73 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileGroupPart = selectedGroupKeys.length === 1
             ? (() => { const g = allGroups.find(g => `${g.subjectName}-${g.gradeLevel}-${g.groupLetter}` === selectedGroupKeys[0]); return g ? `${g.subjectName} ${formatGradeLevelShort(g.gradeLevel)} ${g.groupLetter}` : selectedGroupKeys[0]; })()
             : 'varios grupos';
-        const suggested = `Informe de Evaluación (${fileGroupPart}) - ${formatDateTimeForFilename(new Date())}.xlsx`;
-        const edited = await modalPrompt('Nombre del archivo Excel (puedes editarlo):', suggested, 'Editar nombre de archivo');
-        if (edited === null) { await modalAlert('Descarga cancelada.'); return; }
-        let finalName = (edited.trim() || suggested).replace(/[^a-z0-9\-_. ()]/gi, '_');
-        if (!/\.xlsx$/i.test(finalName)) finalName += '.xlsx';
+        let finalName = overrideFileName;
+        if (!finalName) {
+            const suggested = `Informe de Evaluación (${fileGroupPart}) - ${formatDateTimeForFilename(new Date())}.xlsx`;
+            const edited = await modalPrompt('Nombre del archivo Excel (puedes editarlo):', suggested, 'Editar nombre de archivo');
+            if (edited === null) { await modalAlert('Descarga cancelada.'); return; }
+            finalName = (edited.trim() || suggested).replace(/[^a-z0-9\-_. ()]/gi, '_');
+            if (!/\.xlsx$/i.test(finalName)) finalName += '.xlsx';
+        }
         forceDownload(blob, finalName);
+    }
+
+    async function generateGradesTxt(fileName) {
+        if (selectedGroupKeys.length === 0) { await modalAlert('Selecciona al menos un grupo.'); return; }
+        let out = '';
+        for (const gk of selectedGroupKeys) {
+            const group = allGroups.find(g => `${g.subjectName}-${g.gradeLevel}-${g.groupLetter}` === gk);
+            if (!group) continue;
+            // Construir cabecera actividades como en Excel
+            let activityIndices = [];
+            if (selectedGroupKeys.length === 1) {
+                const lis = Array.from(activitiesList.querySelectorAll('li')).filter(li => !li.classList.contains('disabled'));
+                lis.forEach(li => { const cb = li.querySelector('input[type="checkbox"]'); if (cb?.checked) activityIndices.push(parseInt(cb.value,10)); });
+            } else {
+                activityIndices = (group.activities || []).map((a, i) => ({ i, d: a.date || '' })).sort((a,b)=>(b.d||'').localeCompare(a.d||'')).map(x=>x.i);
+            }
+            let studentsOrdered = [];
+            if (selectedGroupKeys.length === 1) {
+                const lis = Array.from(studentsList.querySelectorAll('li'));
+                const selectedNames = new Set(Array.from(studentsList.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value));
+                lis.forEach(li => { const nameEl = li.querySelector('.item-name'); const nm = nameEl?.textContent; if (nm && selectedNames.has(nm)) { const s = group.students.find(st=>st.name===nm); if (s) studentsOrdered.push(s); } });
+            } else {
+                const withIndex = (group.students || []).map((s, idx) => ({ ...s, originalIndex: idx }));
+                studentsOrdered = sortStudents(withIndex, 'lastName');
+            }
+            out += `Grupo\t${group.subjectName} (${formatGradeLevelShort(group.gradeLevel)} ${group.groupLetter})\n`;
+            const header = ['Nombre','Apellido', ...activityIndices.map(ai=>{ const a=group.activities[ai]; if (!a) return 'Actividad'; const d=new Date((a.date||'')+'T00:00:00'); const dm=d.toLocaleString('es-ES',{day:'2-digit',month:'short'}).replace('.',''); return `${a.name} (${dm})`; })];
+            out += header.join('\t') + '\n';
+            studentsOrdered.forEach(st => {
+                const { firstName, lastName } = splitFullName(st.name||'');
+                const row = [firstName, lastName];
+                activityIndices.forEach(ai => {
+                    const a = group.activities[ai]; const g = a?.grades?.[st.name]; const val = g ? (g.grade ?? '') : ''; row.push(String(val).trim()===''?'-':String(val));
+                });
+                out += row.join('\t') + '\n';
+            });
+            if (includeAttendanceCheckbox.checked) {
+                try {
+                    const attendanceAll = getAttendanceRecords();
+                    let rangeStart = startDateInput.value, rangeEnd = endDateInput.value;
+                    if (!rangeStart || !rangeEnd) { const b=(group.activities||[]).map(a=>a.date).filter(Boolean); if (b.length){ rangeStart=b.slice().sort()[0]; rangeEnd=b.slice().sort().pop(); } }
+                    if (rangeStart && rangeEnd) {
+                        const dates=[]; let cur=new Date(rangeStart+'T00:00:00'), last=new Date(rangeEnd+'T00:00:00');
+                        while(cur<=last){ const y=cur.getFullYear(),m=String(cur.getMonth()+1).padStart(2,'0'),d=String(cur.getDate()).padStart(2,'0'); const dt=`${y}-${m}-${d}`; if (isGroupDateRecorded(gk,dt,allGroups,attendanceAll)) dates.push(dt); cur.setDate(cur.getDate()+1); }
+                        out += `Asistencia\t${group.subjectName} (${formatGradeLevelShort(group.gradeLevel)} ${group.groupLetter})\n`;
+                        out += ['Nombre','Apellido',...dates.map(formatDateForReportFilename)].join('\t') + '\n';
+                        const ga = attendanceAll[gk]||{};
+                        studentsOrdered.forEach(st => {
+                            const { firstName, lastName } = splitFullName(st.name||''); const row=[firstName,lastName];
+                            dates.forEach(dt=>{ const rec=ga[dt]?.[st.name]; row.push(rec ? (rec.status+(rec.justified?' (J)':'')) : ''); });
+                            out += row.join('\t') + '\n';
+                        });
+                    }
+                } catch(e){ /* ignore attendance txt errors */ }
+            }
+            out += '\n';
+        }
+        const blob = new Blob([out], { type: 'text/plain;charset=utf-8' });
+        forceDownload(blob, fileName);
     }
 });
