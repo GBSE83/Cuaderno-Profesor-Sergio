@@ -295,6 +295,9 @@ export const handleLoadBackup = () => {
                         // NEW: restore custom grading/activity configuration if present
                         if (structured.customGradingTypes) saveCustomGradingTypes(structured.customGradingTypes);
                         if (structured.customActivityCategories) saveCustomActivityCategories(structured.customActivityCategories);
+                        if (structured.savedReportConfigurations) localStorage.setItem('savedReportConfigurations', JSON.stringify(structured.savedReportConfigurations)); // NEW
+                        if (structured.highlightedDates) localStorage.setItem('highlightedDates', JSON.stringify(structured.highlightedDates)); // NEW
+                        if (structured.highlightedDateIcons) localStorage.setItem('highlightedDateIcons', JSON.stringify(structured.highlightedDateIcons)); // NEW
                         await modalAlert('Copia cargada. La página se recargará.'); window.location.reload();
                     } else {
                         modalAlert('El archivo no parece contener una copia de seguridad válida.');
@@ -385,7 +388,8 @@ export const handleLoadBackup = () => {
                             return;
                         }
                         const partial = data.structured || data;
-                        saveGroups(partial.groups || []); saveAttendanceRecords(partial.attendanceRecords || {});
+                        saveGroups(partial.groups || []);
+                        saveAttendanceRecords(partial.attendanceRecords || {});
                         if (partial.studentsSortOrder) saveStudentsSortOrder(partial.studentsSortOrder);
                         if (partial.agenda_tasks) saveAgendaTasks(partial.agenda_tasks);
                         if (partial.agenda_meetings) saveAgendaMeetings(partial.agenda_meetings);
@@ -395,6 +399,9 @@ export const handleLoadBackup = () => {
                         // NEW: restore custom grading/activity configuration when loading a partial structured backup
                         if (partial.customGradingTypes) saveCustomGradingTypes(partial.customGradingTypes);
                         if (partial.customActivityCategories) saveCustomActivityCategories(partial.customActivityCategories);
+                        if (partial.savedReportConfigurations) localStorage.setItem('savedReportConfigurations', JSON.stringify(partial.savedReportConfigurations)); // NEW
+                        if (partial.highlightedDates) localStorage.setItem('highlightedDates', JSON.stringify(partial.highlightedDates)); // NEW
+                        if (partial.highlightedDateIcons) localStorage.setItem('highlightedDateIcons', JSON.stringify(partial.highlightedDateIcons)); // NEW
                         await modalAlert('Copia cargada. La página se recargará.'); window.location.reload();
                     })();
                 });

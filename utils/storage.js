@@ -137,7 +137,10 @@ export const getAllAppData = () => {
         teacher_schedule: getTeacherSchedule(),
         customGradingTypes: getCustomGradingTypes(),
         customActivityCategories: getCustomActivityCategories(),
-        customHighlightedDateTypes: getCustomHighlightedDateTypes()
+        customHighlightedDateTypes: getCustomHighlightedDateTypes(),
+        savedReportConfigurations: JSON.parse(localStorage.getItem('savedReportConfigurations') || '[]'), // NEW
+        highlightedDates: JSON.parse(localStorage.getItem('highlightedDates') || '[]'),                 // NEW
+        highlightedDateIcons: JSON.parse(localStorage.getItem('highlightedDateIcons') || '[]')          // NEW
     };
 
     // Capture full localStorage and sessionStorage as raw strings so a full restore is possible
