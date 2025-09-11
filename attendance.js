@@ -248,6 +248,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 previousGroupKey = currentGroupKey; // Set initial previous key
                 const selectedGroup = allGroups.find(g => `${g.subjectName}-${g.gradeLevel}-${g.groupLetter}` === currentGroupKey);
                 applyGroupColorSmart(selectedGroup, pageBody, pageH1);
+                // NEW: Apply preselected date (if coming from long-press navigation)
+                const presetDate = getSessionItem('selectedAttendanceDate');
+                if (presetDate) {
+                    attendanceDateInput.value = presetDate;
+                    currentDate = presetDate;
+                    removeSessionItem('selectedAttendanceDate');
+                }
                 populateAttendanceStatusFilter(); // Populate status filters
                 loadStudentsForAttendance();
             }
@@ -258,6 +265,13 @@ document.addEventListener('DOMContentLoaded', () => {
             previousGroupKey = currentGroupKey; // Set initial previous key
             const selectedGroup = allGroups.find(g => `${g.subjectName}-${g.gradeLevel}-${g.groupLetter}` === currentGroupKey);
             applyGroupColorSmart(selectedGroup, pageBody, pageH1);
+            // NEW: Apply preselected date (if coming from long-press navigation)
+            const presetDate = getSessionItem('selectedAttendanceDate');
+            if (presetDate) {
+                attendanceDateInput.value = presetDate;
+                currentDate = presetDate;
+                removeSessionItem('selectedAttendanceDate');
+            }
             populateAttendanceStatusFilter(); // Populate status filters
             loadStudentsForAttendance();
         } else {
@@ -279,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allInput.checked = currentStatusFilters.includes('all'); // Initialize checked state
         const allLabel = document.createElement('label');
         allLabel.htmlFor = allCheckboxId;
-        allLabel.textContent = 'Todas';
+        allLabel.textContent = 'Todo';
         attendanceStatusFilterContainer.appendChild(allInput);
         attendanceStatusFilterContainer.appendChild(allLabel);
 

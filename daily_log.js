@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!isClassSession) scheduleItem.classList.add('non-class-session');
                 const notesIndicatorHtml = hasNotesForDate ? `<span class="daily-notes-indicator" title="Anotaciones diarias"><img src="pencil_icon.png" alt="Notes" /></span>` : '';
                 scheduleItem.innerHTML = `
-                    <span class="session-display-name">${sessionDisplayName}</span>
+                    <span class="session-display-name"><span class="marquee-text" data-text="${sessionDisplayName}">${sessionDisplayName}</span></span>
                     <span class="time-range">${entry.startTime} - ${entry.endTime}</span>
                     <div class="schedule-item-controls">
                         <button class="edit-schedule-entry-button" data-id="${entry.id}">✏️</button>

@@ -201,6 +201,26 @@ export const showStudentAttendanceHistoryModal = (
     noAttendanceMessage
 ) => {
     modalStudentAttendanceName.textContent = studentName;
+    // Add info button next to student name (once)
+    const headerEl = modalStudentAttendanceName.closest('h2');
+    if (headerEl && !headerEl.querySelector('.ahm-open-student-info')) {
+        const btn = document.createElement('button');
+        btn.className = 'ahm-open-student-info';
+        btn.title = 'Información del alumno';
+        btn.style.marginLeft = '8px';
+        btn.style.border = 'none';
+        btn.style.background = 'transparent';
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = `<img src="info_icon.png" alt="Info" style="width:18px;height:18px;vertical-align:middle;">`;
+        btn.addEventListener('click', () => {
+            // Prefer the most recent record's groupKey; fallback to first available
+            const chosen = Array.isArray(historyData) && historyData.length ? (historyData[0].groupKey || '') : '';
+            if (chosen) sessionStorage.setItem('selectedGroupKey', chosen);
+            sessionStorage.setItem('selectedStudentName', studentName);
+            window.location.href = 'students.html';
+        });
+        headerEl.appendChild(btn);
+    }
     studentAttendanceHistoryTableBody.innerHTML = '';
 
     const filterByLastDaysRadio = document.getElementById('filterByLastDays');
@@ -359,6 +379,22 @@ export const showStudentAttendanceHistoryModal = (
                     </td>
                 `;
                 studentAttendanceHistoryTableBody.appendChild(row);
+                // NEW: Long-press on date to open that day's attendance for the group
+                const dateTd = row.querySelector('td:first-child');
+                let lpTimer;
+                const startLP = () => { lpTimer = setTimeout(() => {
+                    try {
+                        sessionStorage.setItem('selectedGroupKey', record.groupKey);
+                        sessionStorage.setItem('selectedAttendanceDate', record.date);
+                        window.location.href = 'attendance.html';
+                    } catch(e) {}
+                }, 600); };
+                const cancelLP = () => { if (lpTimer) clearTimeout(lpTimer); };
+                dateTd.addEventListener('mousedown', startLP);
+                dateTd.addEventListener('touchstart', startLP, { passive: true });
+                dateTd.addEventListener('mouseup', cancelLP);
+                dateTd.addEventListener('mouseleave', cancelLP);
+                dateTd.addEventListener('touchend', cancelLP);
             });
         }
         // Attach listeners for cycling statuses within the rendered rows

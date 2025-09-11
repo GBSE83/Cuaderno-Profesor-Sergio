@@ -497,6 +497,24 @@ export const showStudentGradesHistoryModal = (
     _currentActivityContextOnOpeningPage = currentActivityContext; // NEW: Store current activity context
 
     modalStudentGradesName.textContent = studentName;
+    // Add info button next to student name (once)
+    const headerEl = modalStudentGradesName.closest('h2');
+    if (headerEl && !headerEl.querySelector('.ghm-open-student-info')) {
+        const btn = document.createElement('button');
+        btn.className = 'ghm-open-student-info';
+        btn.title = 'Información del alumno';
+        btn.style.marginLeft = '8px';
+        btn.style.border = 'none';
+        btn.style.background = 'transparent';
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = `<img src="info_icon.png" alt="Info" style="width:18px;height:18px;vertical-align:middle;">`;
+        btn.addEventListener('click', () => {
+            setSessionItem('selectedStudentName', studentName);
+            setSessionItem('selectedGroupKey', groupKey);
+            window.location.href = 'students.html';
+        });
+        headerEl.appendChild(btn);
+    }
 
     const modalContent = studentGradesHistoryModal.querySelector('.modal-content');
     modalContent.style.maxWidth = '820px';
